@@ -5,9 +5,15 @@
  */
 package kemahasiswaan_10119043_10119065;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import javax.swing.JOptionPane;
+
 /**
  *
- * @author Fachriansyah PC
+ * @author 10119043_10119065
  */
 public class frm_mhs extends javax.swing.JFrame {
     koneksi dbsetting;
@@ -29,6 +35,98 @@ public class frm_mhs extends javax.swing.JFrame {
         settableload();
     }
 
+    private javax.swing.table.DefaultTableModel tablemodel = getDefaultTableModel();
+    private javax.swing.table.DefaultTableModel getDefaultTableModel(){
+        return new javax.swing.table.DefaultTableModel(
+        new Object[][]{},
+        new String [] {"NIM",
+            "Nama Mahasiswa",
+            "Tempat Lahir",
+            "Tanggal Lahir",
+            "Alamat"}
+        )
+    
+        {
+            boolean[] canEdit = new boolean[]
+            {
+                false,false,false,false,false
+            };
+            
+            public boolean isCellEditable(int rowIndex, int columnIndex)
+            {
+                return canEdit[columnIndex];
+            }
+        };
+    }
+    
+    String data[]=new String[5];
+    
+    private void settableload(){
+        String stat = "";
+        try{
+            Class.forName(driver);
+            Connection kon = DriverManager.getConnection(database,user,pass);
+            Statement stt = kon.createStatement();
+            String SQL = "select * from t_mahasiswa";
+            ResultSet res = stt.executeQuery(SQL); 
+            while(res.next()){
+                data[0] = res.getString(1);
+                data[1] = res.getString(2);
+                data[2] = res.getString(4);
+                data[3] = res.getString(5);
+                data[4] = res.getString(6);
+                tablemodel.addRow(data);
+            }
+            res.close();
+            stt.close();
+            kon.close();
+        }catch(Exception ex){
+            System.err.println(ex.getMessage());
+            JOptionPane.showMessageDialog(null, ex.getMessage(),"Error",
+                    JOptionPane.INFORMATION_MESSAGE);
+            System.exit(0);
+        }
+    }
+    
+    public void membersihkan_teks(){
+        txt_nim.setText("");
+        txt_nama.setText("");
+        txt_tanggal_lahir.setText("");
+        txt_tempat_lahir.setText("");
+        txt_alamat.setText("");
+    }
+    
+     public void nonaktif_teks(){
+        txt_nim.setEnabled(false);
+        txt_nama.setEnabled(false);
+        txt_tanggal_lahir.setEnabled(false);
+        txt_tempat_lahir.setEnabled(false);
+        txt_alamat.setEnabled(false);
+     }
+     
+     public void aktif_teks(){
+        txt_nim.setEnabled(true);
+        txt_nama.setEnabled(true);
+        txt_tanggal_lahir.setEnabled(true);
+        txt_tempat_lahir.setEnabled(true);
+        txt_alamat.setEnabled(true);
+     }
+     
+     int row = 0;
+     public void tampil_field(){
+         row = table_mahasiiswa.getSelectedRow();
+         txt_nim.setText(tablemodel.getValueAt(row, 0).toString());
+         txt_nama.setText(tablemodel.getValueAt(row, 1).toString());
+         txt_tempat_lahir.setText(tablemodel.getValueAt(row, 2).toString());
+         txt_tanggal_lahir.setText(tablemodel.getValueAt(row, 3).toString());
+         txt_alamat.setText(tablemodel.getValueAt(row, 4).toString());
+         btn_simpan.setEnabled(false);
+         btn_ubah.setEnabled(true);
+         btn_hapus.setEnabled(true);
+         btn_batal.setEnabled(false);
+        aktif_teks();
+     }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
