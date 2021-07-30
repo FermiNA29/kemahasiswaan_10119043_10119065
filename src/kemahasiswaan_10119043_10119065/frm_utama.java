@@ -32,11 +32,11 @@ public class frm_utama extends javax.swing.JFrame {
         jPanel2 = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
+        btn_mhs = new javax.swing.JButton();
+        btn_matkul = new javax.swing.JButton();
+        btn_nilai = new javax.swing.JButton();
+        btn_simulasi_nilai = new javax.swing.JButton();
+        btn_simulasi_kasus = new javax.swing.JButton();
         jPanel4 = new javax.swing.JPanel();
         jPanel5 = new javax.swing.JPanel();
         jPanel6 = new javax.swing.JPanel();
@@ -90,20 +90,25 @@ public class frm_utama extends javax.swing.JFrame {
 
         jPanel3.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
-        jButton1.setText("Data Mahasiswa");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btn_mhs.setText("Data Mahasiswa");
+        btn_mhs.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btn_mhsActionPerformed(evt);
             }
         });
 
-        jButton2.setText("Data Mata Kuliah");
+        btn_matkul.setText("Data Mata Kuliah");
 
-        jButton3.setText("Data Nilai");
+        btn_nilai.setText("Data Nilai");
+        btn_nilai.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_nilaiActionPerformed(evt);
+            }
+        });
 
-        jButton4.setText("Simulasi Nilai Akhir");
+        btn_simulasi_nilai.setText("Simulasi Nilai Akhir");
 
-        jButton5.setText("Simulasi Kasus");
+        btn_simulasi_kasus.setText("Simulasi Kasus");
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -111,15 +116,15 @@ public class frm_utama extends javax.swing.JFrame {
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGap(18, 18, 18)
-                .addComponent(jButton1)
+                .addComponent(btn_mhs)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
-                .addComponent(jButton2)
+                .addComponent(btn_matkul)
                 .addGap(33, 33, 33)
-                .addComponent(jButton3)
+                .addComponent(btn_nilai)
                 .addGap(58, 58, 58)
-                .addComponent(jButton4)
+                .addComponent(btn_simulasi_nilai)
                 .addGap(35, 35, 35)
-                .addComponent(jButton5)
+                .addComponent(btn_simulasi_kasus)
                 .addGap(30, 30, 30))
         );
         jPanel3Layout.setVerticalGroup(
@@ -127,11 +132,11 @@ public class frm_utama extends javax.swing.JFrame {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGap(19, 19, 19)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2)
-                    .addComponent(jButton3)
-                    .addComponent(jButton4)
-                    .addComponent(jButton5))
+                    .addComponent(btn_mhs)
+                    .addComponent(btn_matkul)
+                    .addComponent(btn_nilai)
+                    .addComponent(btn_simulasi_nilai)
+                    .addComponent(btn_simulasi_kasus))
                 .addContainerGap(21, Short.MAX_VALUE))
         );
 
@@ -243,12 +248,19 @@ public class frm_utama extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void btn_mhsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_mhsActionPerformed
         // TODO add your handling code here:
         frm_mhs frm = new frm_mhs();
         frm.setVisible(true);
         this.setVisible(false);
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_btn_mhsActionPerformed
+
+    private void btn_nilaiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_nilaiActionPerformed
+        // TODO add your handling code here:
+        frm_nilai frm = new frm_nilai();
+        frm.setVisible(true);
+        this.setVisible(false);
+    }//GEN-LAST:event_btn_nilaiActionPerformed
 
     /**
      * @param args the command line arguments
@@ -286,11 +298,11 @@ public class frm_utama extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
+    private javax.swing.JButton btn_matkul;
+    private javax.swing.JButton btn_mhs;
+    private javax.swing.JButton btn_nilai;
+    private javax.swing.JButton btn_simulasi_kasus;
+    private javax.swing.JButton btn_simulasi_nilai;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
