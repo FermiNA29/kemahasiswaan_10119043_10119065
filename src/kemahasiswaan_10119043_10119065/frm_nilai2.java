@@ -638,6 +638,9 @@ public class frm_nilai2 extends javax.swing.JFrame {
 
     private void btn_simpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_simpanActionPerformed
         // TODO add your handling code here:
+        Object nama = comboNama.getSelectedItem();
+        Object namaMk = comboKodeMK.getSelectedItem();
+        
         double nilaiAbsensi = hitungAbsensi(Double.parseDouble(txt_kehadiran.getText()));
         double nilaiTugas = hitungNilaiTugas(Double.parseDouble(txt_tugas1.getText()), Double.parseDouble(txt_tugas2.getText()), Double.parseDouble(txt_tugas3.getText()));
         double nilaiUts = hitungNilaiUTS(Double.parseDouble(txt_uts.getText()));
@@ -652,6 +655,67 @@ public class frm_nilai2 extends javax.swing.JFrame {
         System.out.println(nilaiAkhir);
         System.out.println(index);
         System.out.println(ket);
+        
+        if((comboNama.getSelectedIndex() == 0) || (comboKodeMK.getSelectedIndex() == 0) || (txt_tugas1.getText().isEmpty())){
+            JOptionPane.showMessageDialog(null, "Data tidak boleh kosong. silahkan dilengkapi");
+            comboNama.requestFocus();
+        }else{
+//            double nilai = Double.valueOf(txtNilai.getText());
+            try{
+                Class.forName(driver);
+                Connection kon = DriverManager.getConnection(
+                    database,
+                    user,
+                    pass);
+                Statement stt = kon.createStatement();
+                String SQL = "INSERT INTO `t_nilai`(`nim`,`kd_mk`,`nilai`,`index`,`ket`,`absensi`,`tugas1`,`tugas2`,`tugas3`,`uts`,`uas`,`nilaiAbsen`,`nilaiTugas`,`nilaiUts`,`nilaiUas`) "
+                + "VALUES "
+                + "( '"+txt_nim.getText()+"', "
+                + " '"+txt_KodeMk+"', "
+                + " '"+nilaiAkhir+"', "
+                + " '"+ index + "', "
+                + " '"+ ket + "', "
+                + " '"+ txt_kehadiran.getText() + "', "
+                + " '"+ Double.parseDouble(txt_tugas1.getText()) + "', "
+                + " '"+ Double.parseDouble(txt_tugas2.getText()) + "', "
+                + " '"+ Double.parseDouble(txt_tugas3.getText()) + "', "
+                + " '"+ Double.parseDouble(txt_uts.getText()) + "', "
+                + " '"+ Double.parseDouble(txt_uas.getText()) + "', "
+                + " '"+ nilaiAbsensi + "', "
+                + " '"+ nilaiTugas + "', "
+                + " '"+ nilaiUts + "', "
+                + " '"+ nilaiUas +"')";
+
+                stt.executeUpdate(SQL);
+                data[0] = nama.toString();
+                data[1] = namaMk.toString();
+                data[2] = txt_KodeMk.getText();
+                data[3] = txt_tugas1.getText();
+                data[4] = txt_tugas2.getText();
+                data[5] = txt_tugas3.getText();
+                data[6] = txt_uts.getText();
+                data[7] = txt_uas.getText();
+                data[8] = String.valueOf(nilaiAbsensi);
+                data[9] = String.valueOf(nilaiTugas);
+                data[10] = String.valueOf(nilaiUts);
+                data[11] = String.valueOf(nilaiUas);
+                data[12] = String.valueOf(nilaiAkhir);
+                data[13] = String.valueOf(index);
+                data[14] = ket;
+
+                tablemodel.insertRow(0, data);
+                stt.close();
+                kon.close();
+                membersihkan_teks();
+                btn_simpan.setEnabled(false);
+                nonaktif_teks();
+            }
+            catch(Exception ex){
+                JOptionPane.showMessageDialog(null,
+                    ex.getMessage(),"ERROR",
+                    JOptionPane.INFORMATION_MESSAGE);
+            }
+        }
     }//GEN-LAST:event_btn_simpanActionPerformed
 
     private void comboKodeMKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboKodeMKActionPerformed
