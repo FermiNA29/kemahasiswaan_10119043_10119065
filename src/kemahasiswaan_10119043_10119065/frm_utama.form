@@ -198,6 +198,9 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="Simulasi Nilai Akhir"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_simulasi_nilaiActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="btn_simulasi_kasus">
           <Properties>

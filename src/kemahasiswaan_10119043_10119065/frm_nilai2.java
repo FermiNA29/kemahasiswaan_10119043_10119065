@@ -308,7 +308,7 @@ public class frm_nilai2 extends javax.swing.JFrame {
         Date date = new Date();  
         return dateFormat.format(date);  
     }
-     
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -672,7 +672,10 @@ public class frm_nilai2 extends javax.swing.JFrame {
         Object nama = comboNama.getSelectedItem();
         Object namaMk = comboKodeMK.getSelectedItem();
         //
-        if((comboNama.getSelectedIndex() == 0) || (comboKodeMK.getSelectedIndex() == 0) || (txt_nim.getText().isEmpty())){
+        if((comboNama.getSelectedIndex() == 0) || (comboKodeMK.getSelectedIndex() == 0) || (txt_nim.getText().isEmpty())
+                || (txt_tugas1.getText().isEmpty()) || (txt_tugas2.getText().isEmpty()) || (txt_tugas3.getText().isEmpty())
+                 || (txt_KodeMk.getText().isEmpty()) || (txt_kehadiran.getText().isEmpty())  || (txt_uts.getText().isEmpty())
+                 || (txt_uas.getText().isEmpty()) || (txt_angkatan.getText().isEmpty())){
             JOptionPane.showMessageDialog(null, "Data tidak boleh kosong. silahkan dilengkapi");
             comboNama.requestFocus();
         }else{
@@ -784,27 +787,29 @@ public class frm_nilai2 extends javax.swing.JFrame {
         Object nama = comboNama.getSelectedItem();
         Object namaMk = comboKodeMK.getSelectedItem();
         
-        double nilaiAbsensi = hitungAbsensi(Double.parseDouble(txt_kehadiran.getText()));
-        double nilaiTugas = hitungNilaiTugas(Double.parseDouble(txt_tugas1.getText()), Double.parseDouble(txt_tugas2.getText()), Double.parseDouble(txt_tugas3.getText()));
-        double nilaiUts = hitungNilaiUTS(Double.parseDouble(txt_uts.getText()));
-        double nilaiUas = hitungNilaiUAS(Double.parseDouble(txt_uas.getText()));
-        double nilaiAkhir = nilaiAbsensi + nilaiTugas + nilaiUts + nilaiUas;
-        char index = getIndex(nilaiAkhir);
-        String ket = getKeterangan(index, Double.parseDouble(txt_kehadiran.getText()));
-//        System.out.println(nilaiAbsensi);
-//        System.out.println(nilaiTugas);
-//        System.out.println(nilaiUts);
-//        System.out.println(nilaiUas);
-//        System.out.println(nilaiAkhir);
-//        System.out.println(index);
-//        System.out.println(ket);
-        
-        if((comboNama.getSelectedIndex() == 0) || (comboKodeMK.getSelectedIndex() == 0) || (txt_tugas1.getText().isEmpty())){
+        if((comboNama.getSelectedIndex() == 0) || (comboKodeMK.getSelectedIndex() == 0) || (txt_nim.getText().isEmpty())
+                || (txt_tugas1.getText().isEmpty()) || (txt_tugas2.getText().isEmpty()) || (txt_tugas3.getText().isEmpty())
+                 || (txt_KodeMk.getText().isEmpty()) || (txt_kehadiran.getText().isEmpty())  || (txt_uts.getText().isEmpty())
+                 || (txt_uas.getText().isEmpty()) || (txt_angkatan.getText().isEmpty())){
             JOptionPane.showMessageDialog(null, "Data tidak boleh kosong. silahkan dilengkapi");
             comboNama.requestFocus();
         }else{
 ////            double nilai = Double.valueOf(txtNilai.getText());
             try{
+                double nilaiAbsensi = hitungAbsensi(Double.parseDouble(txt_kehadiran.getText()));
+            double nilaiTugas = hitungNilaiTugas(Double.parseDouble(txt_tugas1.getText()), Double.parseDouble(txt_tugas2.getText()), Double.parseDouble(txt_tugas3.getText()));
+            double nilaiUts = hitungNilaiUTS(Double.parseDouble(txt_uts.getText()));
+            double nilaiUas = hitungNilaiUAS(Double.parseDouble(txt_uas.getText()));
+            double nilaiAkhir = nilaiAbsensi + nilaiTugas + nilaiUts + nilaiUas;
+            char index = getIndex(nilaiAkhir);
+            String ket = getKeterangan(index, Double.parseDouble(txt_kehadiran.getText()));
+//            System.out.println(nilaiAbsensi);
+//            System.out.println(nilaiTugas);
+//            System.out.println(nilaiUts);
+//            System.out.println(nilaiUas);
+//            System.out.println(nilaiAkhir);
+//            System.out.println(index);
+//            System.out.println(ket);
                 Class.forName(driver);
                 Connection kon = DriverManager.getConnection(
                     database,
