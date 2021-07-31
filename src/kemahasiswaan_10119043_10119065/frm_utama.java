@@ -262,7 +262,7 @@ public class frm_utama extends javax.swing.JFrame {
 
     private void btn_nilaiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_nilaiActionPerformed
         // TODO add your handling code here:
-        frm_nilai frm = new frm_nilai();
+        frm_nilai2 frm = new frm_nilai2();
         frm.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_btn_nilaiActionPerformed
