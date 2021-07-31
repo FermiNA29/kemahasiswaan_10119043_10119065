@@ -10,7 +10,9 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import javax.swing.JOptionPane;
-
+import java.util.Date;  
+import java.text.DateFormat;  
+import java.text.SimpleDateFormat;
 /**
  *
  * @author FERMI
@@ -181,11 +183,28 @@ public class frm_nilai2 extends javax.swing.JFrame {
      public void membersihkan_teks(){
         comboNama.setSelectedIndex(0);
         comboKodeMK.setSelectedIndex(0);
-//        txtNilai.setText("");
+        txt_KodeMk.setText("");
+        txt_angkatan.setText("");
+        txt_kehadiran.setText("");
+        txt_nim.setText("");
+        txt_tugas1.setText("");
+        txt_tugas2.setText("");
+        txt_tugas3.setText("");
+        txt_uas.setText("");
+        txt_uts.setText("");
     }
     
      public void nonaktif_teks(){
 //        txtNilai.setEnabled(false);
+        txt_KodeMk.setEnabled(false);
+        txt_angkatan.setEnabled(false);
+        txt_kehadiran.setEnabled(false);
+        txt_nim.setEnabled(false);
+        txt_tugas1.setEnabled(false);
+        txt_tugas2.setEnabled(false);
+        txt_tugas3.setEnabled(false);
+        txt_uas.setEnabled(false);
+        txt_uts.setEnabled(false);
         comboNama.setEnabled(false);
         comboKodeMK.setEnabled(false);
      }
@@ -194,43 +213,74 @@ public class frm_nilai2 extends javax.swing.JFrame {
 //        txtNilai.setEnabled(true);
         comboNama.setEnabled(true);
         comboKodeMK.setEnabled(true);
+        txt_KodeMk.setEnabled(true);
+        txt_angkatan.setEnabled(true);
+        txt_kehadiran.setEnabled(true);
+        txt_nim.setEnabled(true);
+        txt_tugas1.setEnabled(true);
+        txt_tugas2.setEnabled(true);
+        txt_tugas3.setEnabled(true);
+        txt_uas.setEnabled(true);
+        txt_uts.setEnabled(true);
      }
     int row = 0;
      public void tampil_field(){
         row = tblNilai.getSelectedRow();
         comboNama.setSelectedItem(tablemodel.getValueAt(row, 0).toString());
         comboKodeMK.setSelectedItem(tablemodel.getValueAt(row, 1).toString());
-//        txtNilai.setText(tablemodel.getValueAt(row, 2).toString());
+        txt_kehadiran.setText(tablemodel.getValueAt(row, 2).toString());
+        txt_tugas1.setText(tablemodel.getValueAt(row, 3).toString());
+        txt_tugas2.setText(tablemodel.getValueAt(row, 4).toString());
+        txt_tugas3.setText(tablemodel.getValueAt(row, 5).toString());
+        txt_uts.setText(tablemodel.getValueAt(row, 6).toString());
+        txt_uas.setText(tablemodel.getValueAt(row, 7).toString());
         btn_simpan.setEnabled(false);
         btn_ubah.setEnabled(true);
         btn_hapus.setEnabled(true);
         btn_batal.setEnabled(false);
         aktif_teks();
+        System.out.println(tablemodel.getValueAt(row, 2).toString());
      }
      
      public char getIndex(double nilai){
-         char indeks = 0;
+         char indeks = 0 ;
          if(nilai >= 80 && nilai <= 100){
              indeks = 'A';
-         }else if(nilai >= 68 && nilai < 79){
+         }else if(nilai >= 68 && nilai < 80){
              indeks = 'B';
-         }else if(nilai >= 56 && nilai < 67){
+         }else if(nilai >= 56 && nilai < 68){
              indeks = 'C';
          }else if(nilai >= 45 && nilai < 56){
              indeks = 'D';
-         }else if(nilai >= 0 && nilai < 44){
+         }else if(nilai >= 0 && nilai < 45){
              indeks = 'E';
          }
          
          return indeks;
      }
      
-     public String getKeterangan(double nilai, double absensi){
+//     public String getKeterangan(double nilai, double absensi){
+//        String hasil = null;
+//         if((nilai >= 56 || nilai <= 100) && absensi >=11){
+//                hasil = "Lulus";
+//         }else if((nilai < 56  && nilai >= 0) && absensi < 11){
+//                hasil = "Tidak Lulus";
+//         }else{
+//              JOptionPane.showMessageDialog(null, "Nilai Tidak Valid", "Pesan", JOptionPane.ERROR_MESSAGE);  
+//         }
+//         return hasil;
+//     }
+     
+     public String getKeterangan(char index, double absensi){
         String hasil = null;
-         if((nilai >= 56 || nilai <= 100) && absensi >=11){
+         if(absensi < 11 || index == 'D' || index == 'E'){
+//             if (index == 'D' || index == 'E') {
+                 hasil = "Tidak Lulus";
+//             } else {
+//                 hasil = "Tidak Lulus";
+//             }
+         }else if(absensi >= 11.0 || index == 'A' || index == 'B' || index == 'C'){
                 hasil = "Lulus";
-         }else if((nilai < 56  && nilai >= 0) && absensi < 11){
-                hasil = "Tidak Lulus";
          }else{
               JOptionPane.showMessageDialog(null, "Nilai Tidak Valid", "Pesan", JOptionPane.ERROR_MESSAGE);  
          }
@@ -253,6 +303,12 @@ public class frm_nilai2 extends javax.swing.JFrame {
          return (nilai*40)/100;
      }
      
+     private String getTahun() {  
+        DateFormat dateFormat = new SimpleDateFormat("yyyy");  
+        Date date = new Date();  
+        return dateFormat.format(date);  
+    }
+     
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -267,7 +323,7 @@ public class frm_nilai2 extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        txt_cari = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
@@ -299,7 +355,12 @@ public class frm_nilai2 extends javax.swing.JFrame {
         btn_batal = new javax.swing.JButton();
         btn_keluar = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosed(java.awt.event.WindowEvent evt) {
+                formWindowClosed(evt);
+            }
+        });
 
         jPanel1.setBackground(new java.awt.Color(102, 102, 102));
 
@@ -328,6 +389,12 @@ public class frm_nilai2 extends javax.swing.JFrame {
 
         jLabel2.setText("Masukan Data");
 
+        txt_cari.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txt_cariKeyReleased(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -336,7 +403,7 @@ public class frm_nilai2 extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txt_cari, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
@@ -345,7 +412,7 @@ public class frm_nilai2 extends javax.swing.JFrame {
                 .addGap(14, 14, 14)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txt_cari, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(27, Short.MAX_VALUE))
         );
 
@@ -413,6 +480,11 @@ public class frm_nilai2 extends javax.swing.JFrame {
                 "Nama", "Nama MK", "Absensi", "Tgs 1", "Tgs 2", "Tgs 3", "UTS", "UAS", "Nilai Absen", "Nilai Tugas", "Nilai UTS", "Nilai UAS", "Nilai Akhir", "Index", "Keterangan"
             }
         ));
+        tblNilai.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblNilaiMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tblNilai);
 
         btn_tambah.setText("Tambah");
@@ -430,6 +502,11 @@ public class frm_nilai2 extends javax.swing.JFrame {
         });
 
         btn_hapus.setText("Hapus");
+        btn_hapus.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_hapusActionPerformed(evt);
+            }
+        });
 
         btn_simpan.setText("Simpan");
         btn_simpan.addActionListener(new java.awt.event.ActionListener() {
@@ -592,6 +669,71 @@ public class frm_nilai2 extends javax.swing.JFrame {
 
     private void btn_ubahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_ubahActionPerformed
         // TODO add your handling code here:
+        Object nama = comboNama.getSelectedItem();
+        Object namaMk = comboKodeMK.getSelectedItem();
+        //
+        if((comboNama.getSelectedIndex() == 0) || (comboKodeMK.getSelectedIndex() == 0) || (txt_nim.getText().isEmpty())){
+            JOptionPane.showMessageDialog(null, "Data tidak boleh kosong. silahkan dilengkapi");
+            comboNama.requestFocus();
+        }else{
+            double nilaiAbsensi = hitungAbsensi(Double.parseDouble(txt_kehadiran.getText()));
+            double nilaiTugas = hitungNilaiTugas(Double.parseDouble(txt_tugas1.getText()), Double.parseDouble(txt_tugas2.getText()), Double.parseDouble(txt_tugas3.getText()));
+            double nilaiUts = hitungNilaiUTS(Double.parseDouble(txt_uts.getText()));
+            double nilaiUas = hitungNilaiUAS(Double.parseDouble(txt_uas.getText()));
+            double nilaiAkhir = nilaiAbsensi + nilaiTugas + nilaiUts + nilaiUas;
+            char index = getIndex(nilaiAkhir);
+            String ket = getKeterangan(index, Double.parseDouble(txt_kehadiran.getText()));
+        
+            try{
+                Class.forName(driver);
+                Connection kon = DriverManager.getConnection(database,user,pass);
+                Statement stt = kon.createStatement();
+                String SQL = "UPDATE `t_nilai` "
+                + "SET `nilai` = '"+nilaiAkhir+"', "
+                + "`nim` = '"+txt_nim.getText()+"', "
+                + "`kd_mk` = '"+txt_KodeMk.getText()+"', "
+                + "`index` = '"+index+"', "
+                + "`ket` = '"+ket+"', "
+                + "`absensi` = '"+Double.parseDouble(txt_kehadiran.getText())+"', "
+                + "`tugas1` = '"+Double.parseDouble(txt_tugas1.getText())+"', "
+                + "`tugas2` = '"+Double.parseDouble(txt_tugas2.getText())+"', "
+                + "`tugas3` = '"+Double.parseDouble(txt_tugas3.getText())+"', "
+                + "`uts` = '"+Double.parseDouble(txt_uts.getText())+"', "
+                + "`uas` = '"+Double.parseDouble(txt_uas.getText())+"', "
+                + "`nilaiAbsen` = '"+nilaiAbsensi+"', "
+                + "`nilaiTugas` = '"+nilaiTugas+"', "
+                + "`nilaiUts` = '"+nilaiUts+"', "
+                + "`nilaiUas` = '"+nilaiUas+"' "
+                + "WHERE "
+                + "`nim` ='"+txt_nim.getText()+"' AND `kd_mk` = '"+txt_KodeMk.getText()+"'; ";
+                stt.executeUpdate(SQL);
+                data[0] = nama.toString();
+                data[1] = namaMk.toString();
+                data[2] = txt_kehadiran.getText();
+                data[3] = txt_tugas1.getText();
+                data[4] = txt_tugas2.getText();
+                data[5] = txt_tugas3.getText();
+                data[6] = txt_uts.getText();
+                data[7] = txt_uas.getText();
+                data[8] = String.valueOf(nilaiAbsensi);
+                data[9] = String.valueOf(nilaiTugas);
+                data[10] = String.valueOf(nilaiUts);
+                data[11] = String.valueOf(nilaiUas);
+                data[12] = String.valueOf(nilaiAkhir);
+                data[13] = String.valueOf(index);
+//                data[14] = ket;
+                tablemodel.removeRow(row);
+                tablemodel.insertRow(row, data);
+                stt.close();
+                kon.close();
+                membersihkan_teks();
+                btn_simpan.setEnabled(false);
+                nonaktif_teks();
+            }
+            catch(Exception ex){
+                System.err.println(ex.getMessage());
+            }
+        }
     }//GEN-LAST:event_btn_ubahActionPerformed
 
     private void btn_tambahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_tambahActionPerformed
@@ -602,6 +744,7 @@ public class frm_nilai2 extends javax.swing.JFrame {
         btn_ubah.setEnabled(false);
         btn_hapus.setEnabled(false);
         btn_keluar.setEnabled(false);
+        txt_angkatan.setText(getTahun());
         aktif_teks();
     }//GEN-LAST:event_btn_tambahActionPerformed
 
@@ -647,20 +790,20 @@ public class frm_nilai2 extends javax.swing.JFrame {
         double nilaiUas = hitungNilaiUAS(Double.parseDouble(txt_uas.getText()));
         double nilaiAkhir = nilaiAbsensi + nilaiTugas + nilaiUts + nilaiUas;
         char index = getIndex(nilaiAkhir);
-        String ket = getKeterangan(nilaiAkhir, Double.parseDouble(txt_kehadiran.getText()));
-        System.out.println(nilaiAbsensi);
-        System.out.println(nilaiTugas);
-        System.out.println(nilaiUts);
-        System.out.println(nilaiUas);
-        System.out.println(nilaiAkhir);
-        System.out.println(index);
-        System.out.println(ket);
+        String ket = getKeterangan(index, Double.parseDouble(txt_kehadiran.getText()));
+//        System.out.println(nilaiAbsensi);
+//        System.out.println(nilaiTugas);
+//        System.out.println(nilaiUts);
+//        System.out.println(nilaiUas);
+//        System.out.println(nilaiAkhir);
+//        System.out.println(index);
+//        System.out.println(ket);
         
         if((comboNama.getSelectedIndex() == 0) || (comboKodeMK.getSelectedIndex() == 0) || (txt_tugas1.getText().isEmpty())){
             JOptionPane.showMessageDialog(null, "Data tidak boleh kosong. silahkan dilengkapi");
             comboNama.requestFocus();
         }else{
-//            double nilai = Double.valueOf(txtNilai.getText());
+////            double nilai = Double.valueOf(txtNilai.getText());
             try{
                 Class.forName(driver);
                 Connection kon = DriverManager.getConnection(
@@ -671,11 +814,11 @@ public class frm_nilai2 extends javax.swing.JFrame {
                 String SQL = "INSERT INTO `t_nilai`(`nim`,`kd_mk`,`nilai`,`index`,`ket`,`absensi`,`tugas1`,`tugas2`,`tugas3`,`uts`,`uas`,`nilaiAbsen`,`nilaiTugas`,`nilaiUts`,`nilaiUas`) "
                 + "VALUES "
                 + "( '"+txt_nim.getText()+"', "
-                + " '"+txt_KodeMk+"', "
+                + " '"+txt_KodeMk.getText()+"', "
                 + " '"+nilaiAkhir+"', "
                 + " '"+ index + "', "
                 + " '"+ ket + "', "
-                + " '"+ txt_kehadiran.getText() + "', "
+                + " '"+ Double.parseDouble(txt_kehadiran.getText()) + "', "
                 + " '"+ Double.parseDouble(txt_tugas1.getText()) + "', "
                 + " '"+ Double.parseDouble(txt_tugas2.getText()) + "', "
                 + " '"+ Double.parseDouble(txt_tugas3.getText()) + "', "
@@ -749,6 +892,81 @@ public class frm_nilai2 extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_comboKodeMKActionPerformed
 
+    private void tblNilaiMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblNilaiMouseClicked
+        // TODO add your handling code here:
+        if(evt.getClickCount() == 1){
+            tampil_field();
+        }
+    }//GEN-LAST:event_tblNilaiMouseClicked
+
+    private void btn_hapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_hapusActionPerformed
+        // TODO add your handling code here:
+        try{
+//            System.out.println(txt_nim.getText());
+//            System.out.println(txt_KodeMk.getText());
+            Class.forName(driver);
+            Connection kon = DriverManager.getConnection(database,user,pass);
+            Statement stt = kon.createStatement();
+            String  SQL = "DELETE FROM t_nilai "
+            + " where "
+            + " nim = '"+txt_nim.getText()+"' AND "
+            + " kd_mk = '"+txt_KodeMk.getText()+"'";
+            stt.executeUpdate(SQL);
+            tablemodel.removeRow(row);
+            stt.close();
+            kon.close();
+            membersihkan_teks();
+        }catch(Exception ex){
+            System.err.println(ex.getMessage());
+        }
+    }//GEN-LAST:event_btn_hapusActionPerformed
+
+    private void txt_cariKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_cariKeyReleased
+        // TODO add your handling code here:
+        tablemodel.setRowCount(0);
+
+        try{
+            Class.forName(driver);
+            Connection kon = DriverManager.getConnection(database,user,pass);
+            Statement stt = kon.createStatement();
+            String SQL = "select * from t_nilai join t_mahasiswa on t_nilai.`nim`=t_mahasiswa.`nim` join t_mata_kuliah on t_mata_kuliah.`kd_mk`=t_nilai.`kd_mk` where t_mahasiswa.`nama` LIKE '%"+
+                           txt_cari.getText()+"%' OR t_mata_kuliah.`nama_mk` LIKE '%"+txt_cari.getText()+"%'";
+            ResultSet res = stt.executeQuery(SQL);
+            while(res.next()){
+                data[0] = res.getString(18);
+                data[1] = res.getString(24);
+                data[2] = res.getString(7);
+                data[3] = res.getString(8);
+                data[4] = res.getString(9);
+                data[5] = res.getString(10);
+                data[6] = res.getString(11);
+                data[7] = res.getString(12);
+                data[8] = res.getString(13);
+                data[9] = res.getString(14);
+                data[10] = res.getString(15);
+                data[11] = res.getString(16);
+                data[12] = res.getString(4);
+                data[13] = res.getString(5);
+                data[14] = res.getString(6);
+                tablemodel.addRow(data);
+            }
+            res.close();
+            stt.close();
+            kon.close();
+        }catch(Exception ex){
+            System.err.println(ex.getMessage());
+            JOptionPane.showMessageDialog(null, ex.getMessage(),"ERROR",
+                JOptionPane.INFORMATION_MESSAGE);
+            System.exit(0);
+        }
+    }//GEN-LAST:event_txt_cariKeyReleased
+
+    private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
+        // TODO add your handling code here:
+        frm_utama frm = new frm_utama();
+        frm.setVisible(true);
+    }//GEN-LAST:event_formWindowClosed
+
     /**
      * @param args the command line arguments
      */
@@ -809,10 +1027,10 @@ public class frm_nilai2 extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextField jTextField1;
     private javax.swing.JTable tblNilai;
     private javax.swing.JTextField txt_KodeMk;
     private javax.swing.JTextField txt_angkatan;
+    private javax.swing.JTextField txt_cari;
     private javax.swing.JTextField txt_kehadiran;
     private javax.swing.JTextField txt_nim;
     private javax.swing.JTextField txt_tugas1;
