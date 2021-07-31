@@ -305,6 +305,11 @@ public class frm_nilai extends javax.swing.JFrame {
         comboNim.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "-- Pilih --", " " }));
 
         comboKodeMK.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "-- Pilih --", " " }));
+        comboKodeMK.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                comboKodeMKActionPerformed(evt);
+            }
+        });
 
         jLabel11.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel11.setText("Kode MK");
@@ -618,6 +623,10 @@ public class frm_nilai extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_btn_simpanActionPerformed
+
+    private void comboKodeMKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboKodeMKActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_comboKodeMKActionPerformed
 
     /**
      * @param args the command line arguments

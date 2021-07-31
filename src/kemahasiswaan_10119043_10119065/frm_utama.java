@@ -107,6 +107,11 @@ public class frm_utama extends javax.swing.JFrame {
         });
 
         btn_simulasi_nilai.setText("Simulasi Nilai Akhir");
+        btn_simulasi_nilai.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_simulasi_nilaiActionPerformed(evt);
+            }
+        });
 
         btn_simulasi_kasus.setText("Simulasi Kasus");
 
@@ -261,6 +266,13 @@ public class frm_utama extends javax.swing.JFrame {
         frm.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_btn_nilaiActionPerformed
+
+    private void btn_simulasi_nilaiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_simulasi_nilaiActionPerformed
+        // TODO add your handling code here:
+        frm_simulasi_nilai frm_sn = new frm_simulasi_nilai();
+        frm_sn.setVisible(true);
+        this.setVisible(false);
+    }//GEN-LAST:event_btn_simulasi_nilaiActionPerformed
 
     /**
      * @param args the command line arguments
