@@ -124,8 +124,6 @@ public class frm_matkul extends javax.swing.JFrame {
         jPanel3 = new javax.swing.JPanel();
         jLabel9 = new javax.swing.JLabel();
         txt_cari_mk = new javax.swing.JTextField();
-        btn_cari = new javax.swing.JToggleButton();
-        btn_show_all = new javax.swing.JToggleButton();
         jLabel2 = new javax.swing.JLabel();
         txt_namamk = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
@@ -139,7 +137,15 @@ public class frm_matkul extends javax.swing.JFrame {
         btn_batal = new javax.swing.JButton();
         btn_keluar = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosed(java.awt.event.WindowEvent evt) {
+                formWindowClosed(evt);
+            }
+            public void windowOpened(java.awt.event.WindowEvent evt) {
+                formWindowOpened(evt);
+            }
+        });
 
         jPanel2.setBackground(new java.awt.Color(102, 102, 102));
 
@@ -170,17 +176,9 @@ public class frm_matkul extends javax.swing.JFrame {
         jLabel9.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel9.setText("Kode MK/Nama MK");
 
-        btn_cari.setText("cari");
-        btn_cari.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_cariActionPerformed(evt);
-            }
-        });
-
-        btn_show_all.setText("Tampilkan Semua");
-        btn_show_all.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_show_allActionPerformed(evt);
+        txt_cari_mk.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txt_cari_mkKeyReleased(evt);
             }
         });
 
@@ -193,11 +191,7 @@ public class frm_matkul extends javax.swing.JFrame {
                 .addComponent(jLabel9)
                 .addGap(18, 18, 18)
                 .addComponent(txt_cari_mk, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(30, 30, 30)
-                .addComponent(btn_cari)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btn_show_all, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -205,11 +199,8 @@ public class frm_matkul extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel9)
-                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(btn_cari)
-                        .addComponent(btn_show_all))
                     .addComponent(txt_cari_mk, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(15, Short.MAX_VALUE))
+                .addContainerGap(16, Short.MAX_VALUE))
         );
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
@@ -350,39 +341,6 @@ public class frm_matkul extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btn_cariActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_cariActionPerformed
-        // TODO add your handling code here:
-        tablemodel.setRowCount(0);
-
-        try{
-            Class.forName(driver);
-            Connection kon = DriverManager.getConnection(database,user,pass);
-            Statement stt = kon.createStatement();
-            String SQL = "SELECT * FROM t_mata_kuliah where `kd_mk` LIKE '%"+
-            txt_cari_mk.getText()+"%' OR `nama_mk` LIKE '%"+txt_cari_mk.getText()+"%'";
-            ResultSet res = stt.executeQuery(SQL);
-            while(res.next()){
-                data[0] = res.getString(1);
-                data[1] = res.getString(2);
-                tablemodel.addRow(data);
-            }
-            res.close();
-            stt.close();
-            kon.close();
-        }catch(Exception ex){
-            System.err.println(ex.getMessage());
-            JOptionPane.showMessageDialog(null, ex.getMessage(),"ERROR",
-                JOptionPane.INFORMATION_MESSAGE);
-            System.exit(0);
-        }
-    }//GEN-LAST:event_btn_cariActionPerformed
-
-    private void btn_show_allActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_show_allActionPerformed
-        // TODO add your handling code here:
-        tablemodel.setRowCount(0);
-        settableload();
-    }//GEN-LAST:event_btn_show_allActionPerformed
-
     private void tbl_mkMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbl_mkMouseClicked
         // TODO add your handling code here:
         if(evt.getClickCount() == 1){
@@ -499,6 +457,44 @@ public class frm_matkul extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btn_simpanActionPerformed
 
+    private void txt_cari_mkKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_cari_mkKeyReleased
+        // TODO add your handling code here:
+        tablemodel.setRowCount(0);
+
+        try{
+            Class.forName(driver);
+            Connection kon = DriverManager.getConnection(database,user,pass);
+            Statement stt = kon.createStatement();
+            String SQL = "SELECT * FROM t_mata_kuliah where `kd_mk` LIKE '%"+
+            txt_cari_mk.getText()+"%' OR `nama_mk` LIKE '%"+txt_cari_mk.getText()+"%'";
+            ResultSet res = stt.executeQuery(SQL);
+            while(res.next()){
+                data[0] = res.getString(1);
+                data[1] = res.getString(2);
+                tablemodel.addRow(data);
+            }
+            res.close();
+            stt.close();
+            kon.close();
+        }catch(Exception ex){
+            System.err.println(ex.getMessage());
+            JOptionPane.showMessageDialog(null, ex.getMessage(),"ERROR",
+                JOptionPane.INFORMATION_MESSAGE);
+            System.exit(0);
+        }
+    }//GEN-LAST:event_txt_cari_mkKeyReleased
+
+    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+        // TODO add your handling code here:
+        
+    }//GEN-LAST:event_formWindowOpened
+
+    private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
+        // TODO add your handling code here:
+        frm_utama frm = new frm_utama();
+        frm.setVisible(true);
+    }//GEN-LAST:event_formWindowClosed
+
     /**
      * @param args the command line arguments
      */
@@ -536,10 +532,8 @@ public class frm_matkul extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_batal;
-    private javax.swing.JToggleButton btn_cari;
     private javax.swing.JButton btn_hapus;
     private javax.swing.JButton btn_keluar;
-    private javax.swing.JToggleButton btn_show_all;
     private javax.swing.JButton btn_simpan;
     private javax.swing.JButton btn_tambah;
     private javax.swing.JButton btn_ubah;

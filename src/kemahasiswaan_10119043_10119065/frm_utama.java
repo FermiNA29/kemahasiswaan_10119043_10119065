@@ -98,6 +98,11 @@ public class frm_utama extends javax.swing.JFrame {
         });
 
         btn_matkul.setText("Data Mata Kuliah");
+        btn_matkul.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_matkulActionPerformed(evt);
+            }
+        });
 
         btn_nilai.setText("Data Nilai");
         btn_nilai.addActionListener(new java.awt.event.ActionListener() {
@@ -262,10 +267,11 @@ public class frm_utama extends javax.swing.JFrame {
 
     private void btn_nilaiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_nilaiActionPerformed
         // TODO add your handling code here:
-        frm_nilai frm = new frm_nilai();
+        frm_nilai2 frm = new frm_nilai2();
         frm.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_btn_nilaiActionPerformed
+
 
     private void btn_simulasi_nilaiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_simulasi_nilaiActionPerformed
         // TODO add your handling code here:
@@ -273,6 +279,14 @@ public class frm_utama extends javax.swing.JFrame {
         frm_sn.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_btn_simulasi_nilaiActionPerformed
+
+    private void btn_matkulActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_matkulActionPerformed
+        // TODO add your handling code here:
+        frm_matkul frm = new frm_matkul();
+        frm.setVisible(true);
+        this.setVisible(false);
+    }//GEN-LAST:event_btn_matkulActionPerformed
+
 
     /**
      * @param args the command line arguments
