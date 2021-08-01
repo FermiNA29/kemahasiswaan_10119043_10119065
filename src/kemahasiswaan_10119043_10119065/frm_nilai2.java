@@ -19,7 +19,7 @@ import java.text.SimpleDateFormat;
  */
 public class frm_nilai2 extends javax.swing.JFrame {
     koneksi dbsetting;
-    String driver, database,user,pass;
+    String driver, database,user,pass,angkatan;
     Object tabel;
     /**
      * Creates new form frm_nilai2
@@ -152,8 +152,8 @@ public class frm_nilai2 extends javax.swing.JFrame {
             String SQL = "select * from t_nilai join t_mahasiswa on t_nilai.nim=t_mahasiswa.nim join t_mata_kuliah on t_mata_kuliah.kd_mk=t_nilai.kd_mk";
             ResultSet res = stt.executeQuery(SQL);
             while(res.next()){
-                data[0] = res.getString(18);
-                data[1] = res.getString(24);
+                data[0] = res.getString(19);
+                data[1] = res.getString(25);
                 data[2] = res.getString(7);
                 data[3] = res.getString(8);
                 data[4] = res.getString(9);
@@ -168,6 +168,28 @@ public class frm_nilai2 extends javax.swing.JFrame {
                 data[13] = res.getString(5);
                 data[14] = res.getString(6);
                 tablemodel.addRow(data);
+            }
+            res.close();
+            stt.close();
+            kon.close();
+        }catch(Exception ex){
+            System.err.println(ex.getMessage());
+            JOptionPane.showMessageDialog(null, ex.getMessage(),"Error",
+                    JOptionPane.INFORMATION_MESSAGE);
+            System.exit(0);
+        }
+    }
+    
+    public void getAngkatanFromDb() {
+        try{
+            Class.forName(driver);
+            Connection kon = DriverManager.getConnection(database,user,pass);
+            Statement stt = kon.createStatement();
+            String SQL = "select angkatan from t_nilai";
+            ResultSet res = stt.executeQuery(SQL);
+            while(res.next()){
+//                angkatan = res.getString(0);
+                txt_angkatan.setText(res.getString(1));
             }
             res.close();
             stt.close();
@@ -234,12 +256,14 @@ public class frm_nilai2 extends javax.swing.JFrame {
         txt_tugas3.setText(tablemodel.getValueAt(row, 5).toString());
         txt_uts.setText(tablemodel.getValueAt(row, 6).toString());
         txt_uas.setText(tablemodel.getValueAt(row, 7).toString());
+//        txt_angkatan.setText(angkatan);
+        getAngkatanFromDb();
         btn_simpan.setEnabled(false);
         btn_ubah.setEnabled(true);
         btn_hapus.setEnabled(true);
         btn_batal.setEnabled(false);
         aktif_teks();
-        System.out.println(tablemodel.getValueAt(row, 2).toString());
+        System.out.println(angkatan);
      }
      
      public char getIndex(double nilai){
@@ -679,62 +703,68 @@ public class frm_nilai2 extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Data tidak boleh kosong. silahkan dilengkapi");
             comboNama.requestFocus();
         }else{
-            double nilaiAbsensi = hitungAbsensi(Double.parseDouble(txt_kehadiran.getText()));
-            double nilaiTugas = hitungNilaiTugas(Double.parseDouble(txt_tugas1.getText()), Double.parseDouble(txt_tugas2.getText()), Double.parseDouble(txt_tugas3.getText()));
-            double nilaiUts = hitungNilaiUTS(Double.parseDouble(txt_uts.getText()));
-            double nilaiUas = hitungNilaiUAS(Double.parseDouble(txt_uas.getText()));
-            double nilaiAkhir = nilaiAbsensi + nilaiTugas + nilaiUts + nilaiUas;
-            char index = getIndex(nilaiAkhir);
-            String ket = getKeterangan(index, Double.parseDouble(txt_kehadiran.getText()));
-        
-            try{
-                Class.forName(driver);
-                Connection kon = DriverManager.getConnection(database,user,pass);
-                Statement stt = kon.createStatement();
-                String SQL = "UPDATE `t_nilai` "
-                + "SET `nilai` = '"+nilaiAkhir+"', "
-                + "`nim` = '"+txt_nim.getText()+"', "
-                + "`kd_mk` = '"+txt_KodeMk.getText()+"', "
-                + "`index` = '"+index+"', "
-                + "`ket` = '"+ket+"', "
-                + "`absensi` = '"+Double.parseDouble(txt_kehadiran.getText())+"', "
-                + "`tugas1` = '"+Double.parseDouble(txt_tugas1.getText())+"', "
-                + "`tugas2` = '"+Double.parseDouble(txt_tugas2.getText())+"', "
-                + "`tugas3` = '"+Double.parseDouble(txt_tugas3.getText())+"', "
-                + "`uts` = '"+Double.parseDouble(txt_uts.getText())+"', "
-                + "`uas` = '"+Double.parseDouble(txt_uas.getText())+"', "
-                + "`nilaiAbsen` = '"+nilaiAbsensi+"', "
-                + "`nilaiTugas` = '"+nilaiTugas+"', "
-                + "`nilaiUts` = '"+nilaiUts+"', "
-                + "`nilaiUas` = '"+nilaiUas+"' "
-                + "WHERE "
-                + "`nim` ='"+txt_nim.getText()+"' AND `kd_mk` = '"+txt_KodeMk.getText()+"'; ";
-                stt.executeUpdate(SQL);
-                data[0] = nama.toString();
-                data[1] = namaMk.toString();
-                data[2] = txt_kehadiran.getText();
-                data[3] = txt_tugas1.getText();
-                data[4] = txt_tugas2.getText();
-                data[5] = txt_tugas3.getText();
-                data[6] = txt_uts.getText();
-                data[7] = txt_uas.getText();
-                data[8] = String.valueOf(nilaiAbsensi);
-                data[9] = String.valueOf(nilaiTugas);
-                data[10] = String.valueOf(nilaiUts);
-                data[11] = String.valueOf(nilaiUas);
-                data[12] = String.valueOf(nilaiAkhir);
-                data[13] = String.valueOf(index);
-//                data[14] = ket;
-                tablemodel.removeRow(row);
-                tablemodel.insertRow(row, data);
-                stt.close();
-                kon.close();
-                membersihkan_teks();
-                btn_simpan.setEnabled(false);
-                nonaktif_teks();
-            }
-            catch(Exception ex){
-                System.err.println(ex.getMessage());
+            if (Double.valueOf(txt_kehadiran.getText()) >= 0 && Double.valueOf(txt_kehadiran.getText()) <=14) {
+                double nilaiAbsensi = hitungAbsensi(Double.parseDouble(txt_kehadiran.getText()));
+                double nilaiTugas = hitungNilaiTugas(Double.parseDouble(txt_tugas1.getText()), Double.parseDouble(txt_tugas2.getText()), Double.parseDouble(txt_tugas3.getText()));
+                double nilaiUts = hitungNilaiUTS(Double.parseDouble(txt_uts.getText()));
+                double nilaiUas = hitungNilaiUAS(Double.parseDouble(txt_uas.getText()));
+                double nilaiAkhir = nilaiAbsensi + nilaiTugas + nilaiUts + nilaiUas;
+                char index = getIndex(nilaiAkhir);
+                String ket = getKeterangan(index, Double.parseDouble(txt_kehadiran.getText()));
+
+                try{
+                    Class.forName(driver);
+                    Connection kon = DriverManager.getConnection(database,user,pass);
+                    Statement stt = kon.createStatement();
+                    String SQL = "UPDATE `t_nilai` "
+                    + "SET `nilai` = '"+nilaiAkhir+"', "
+                    + "`nim` = '"+txt_nim.getText()+"', "
+                    + "`kd_mk` = '"+txt_KodeMk.getText()+"', "
+                    + "`index` = '"+index+"', "
+                    + "`ket` = '"+ket+"', "
+                    + "`absensi` = '"+Double.parseDouble(txt_kehadiran.getText())+"', "
+                    + "`tugas1` = '"+Double.parseDouble(txt_tugas1.getText())+"', "
+                    + "`tugas2` = '"+Double.parseDouble(txt_tugas2.getText())+"', "
+                    + "`tugas3` = '"+Double.parseDouble(txt_tugas3.getText())+"', "
+                    + "`uts` = '"+Double.parseDouble(txt_uts.getText())+"', "
+                    + "`uas` = '"+Double.parseDouble(txt_uas.getText())+"', "
+                    + "`nilaiAbsen` = '"+nilaiAbsensi+"', "
+                    + "`nilaiTugas` = '"+nilaiTugas+"', "
+                    + "`nilaiUts` = '"+nilaiUts+"', "
+                    + "`nilaiUas` = '"+nilaiUas+"' "
+                    + "`angkatan` = '"+txt_angkatan.getText()+"' "
+                    + "WHERE "
+                    + "`nim` ='"+txt_nim.getText()+"' AND `kd_mk` = '"+txt_KodeMk.getText()+"'; ";
+                    stt.executeUpdate(SQL);
+                    data[0] = nama.toString();
+                    data[1] = namaMk.toString();
+                    data[2] = txt_kehadiran.getText();
+                    data[3] = txt_tugas1.getText();
+                    data[4] = txt_tugas2.getText();
+                    data[5] = txt_tugas3.getText();
+                    data[6] = txt_uts.getText();
+                    data[7] = txt_uas.getText();
+                    data[8] = String.valueOf(nilaiAbsensi);
+                    data[9] = String.valueOf(nilaiTugas);
+                    data[10] = String.valueOf(nilaiUts);
+                    data[11] = String.valueOf(nilaiUas);
+                    data[12] = String.valueOf(nilaiAkhir);
+                    data[13] = String.valueOf(index);
+    //                data[14] = ket;
+                    tablemodel.removeRow(row);
+                    tablemodel.insertRow(row, data);
+                    stt.close();
+                    kon.close();
+                    membersihkan_teks();
+                    btn_simpan.setEnabled(false);
+                    nonaktif_teks();
+                }
+                catch(Exception ex){
+                    System.err.println(ex.getMessage());
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "Kehadiran tidak boleh kurang dari 0 atau lebih dari 14 pertemuan!","ERROR",
+                JOptionPane.ERROR_MESSAGE);
             }
         }
     }//GEN-LAST:event_btn_ubahActionPerformed
@@ -793,76 +823,83 @@ public class frm_nilai2 extends javax.swing.JFrame {
                  || (txt_uas.getText().isEmpty()) || (txt_angkatan.getText().isEmpty())){
             JOptionPane.showMessageDialog(null, "Data tidak boleh kosong. silahkan dilengkapi");
             comboNama.requestFocus();
-        }else{
+        }else {
 ////            double nilai = Double.valueOf(txtNilai.getText());
-            try{
-                double nilaiAbsensi = hitungAbsensi(Double.parseDouble(txt_kehadiran.getText()));
-            double nilaiTugas = hitungNilaiTugas(Double.parseDouble(txt_tugas1.getText()), Double.parseDouble(txt_tugas2.getText()), Double.parseDouble(txt_tugas3.getText()));
-            double nilaiUts = hitungNilaiUTS(Double.parseDouble(txt_uts.getText()));
-            double nilaiUas = hitungNilaiUAS(Double.parseDouble(txt_uas.getText()));
-            double nilaiAkhir = nilaiAbsensi + nilaiTugas + nilaiUts + nilaiUas;
-            char index = getIndex(nilaiAkhir);
-            String ket = getKeterangan(index, Double.parseDouble(txt_kehadiran.getText()));
-//            System.out.println(nilaiAbsensi);
-//            System.out.println(nilaiTugas);
-//            System.out.println(nilaiUts);
-//            System.out.println(nilaiUas);
-//            System.out.println(nilaiAkhir);
-//            System.out.println(index);
-//            System.out.println(ket);
-                Class.forName(driver);
-                Connection kon = DriverManager.getConnection(
-                    database,
-                    user,
-                    pass);
-                Statement stt = kon.createStatement();
-                String SQL = "INSERT INTO `t_nilai`(`nim`,`kd_mk`,`nilai`,`index`,`ket`,`absensi`,`tugas1`,`tugas2`,`tugas3`,`uts`,`uas`,`nilaiAbsen`,`nilaiTugas`,`nilaiUts`,`nilaiUas`) "
-                + "VALUES "
-                + "( '"+txt_nim.getText()+"', "
-                + " '"+txt_KodeMk.getText()+"', "
-                + " '"+nilaiAkhir+"', "
-                + " '"+ index + "', "
-                + " '"+ ket + "', "
-                + " '"+ Double.parseDouble(txt_kehadiran.getText()) + "', "
-                + " '"+ Double.parseDouble(txt_tugas1.getText()) + "', "
-                + " '"+ Double.parseDouble(txt_tugas2.getText()) + "', "
-                + " '"+ Double.parseDouble(txt_tugas3.getText()) + "', "
-                + " '"+ Double.parseDouble(txt_uts.getText()) + "', "
-                + " '"+ Double.parseDouble(txt_uas.getText()) + "', "
-                + " '"+ nilaiAbsensi + "', "
-                + " '"+ nilaiTugas + "', "
-                + " '"+ nilaiUts + "', "
-                + " '"+ nilaiUas +"')";
+            if(Double.valueOf(txt_kehadiran.getText()) >= 0 && Double.valueOf(txt_kehadiran.getText()) <=14){
+                try{
+                    double nilaiAbsensi = hitungAbsensi(Double.parseDouble(txt_kehadiran.getText()));
+                    double nilaiTugas = hitungNilaiTugas(Double.parseDouble(txt_tugas1.getText()), Double.parseDouble(txt_tugas2.getText()), Double.parseDouble(txt_tugas3.getText()));
+                    double nilaiUts = hitungNilaiUTS(Double.parseDouble(txt_uts.getText()));
+                    double nilaiUas = hitungNilaiUAS(Double.parseDouble(txt_uas.getText()));
+                    double nilaiAkhir = nilaiAbsensi + nilaiTugas + nilaiUts + nilaiUas;
+                    char index = getIndex(nilaiAkhir);
+                    String ket = getKeterangan(index, Double.parseDouble(txt_kehadiran.getText()));
+        //            System.out.println(nilaiAbsensi);
+        //            System.out.println(nilaiTugas);
+        //            System.out.println(nilaiUts);
+        //            System.out.println(nilaiUas);
+        //            System.out.println(nilaiAkhir);
+        //            System.out.println(index);
+        //            System.out.println(ket);
+                    Class.forName(driver);
+                    Connection kon = DriverManager.getConnection(
+                        database,
+                        user,
+                        pass);
+                    Statement stt = kon.createStatement();
+                    String SQL = "INSERT INTO `t_nilai`(`nim`,`kd_mk`,`nilai`,`index`,`ket`,`absensi`,`tugas1`,`tugas2`,`tugas3`,`uts`,`uas`,`nilaiAbsen`,`nilaiTugas`,`nilaiUts`,`nilaiUas`,'angkatan`) "
+                    + "VALUES "
+                    + "( '"+txt_nim.getText()+"', "
+                    + " '"+txt_KodeMk.getText()+"', "
+                    + " '"+nilaiAkhir+"', "
+                    + " '"+ index + "', "
+                    + " '"+ ket + "', "
+                    + " '"+ Double.parseDouble(txt_kehadiran.getText()) + "', "
+                    + " '"+ Double.parseDouble(txt_tugas1.getText()) + "', "
+                    + " '"+ Double.parseDouble(txt_tugas2.getText()) + "', "
+                    + " '"+ Double.parseDouble(txt_tugas3.getText()) + "', "
+                    + " '"+ Double.parseDouble(txt_uts.getText()) + "', "
+                    + " '"+ Double.parseDouble(txt_uas.getText()) + "', "
+                    + " '"+ nilaiAbsensi + "', "
+                    + " '"+ nilaiTugas + "', "
+                    + " '"+ nilaiUts + "', "
+                    + " '"+ nilaiUas +"',"
+                    + " '"+ txt_angkatan.getText() +"')";
 
-                stt.executeUpdate(SQL);
-                data[0] = nama.toString();
-                data[1] = namaMk.toString();
-                data[2] = txt_KodeMk.getText();
-                data[3] = txt_tugas1.getText();
-                data[4] = txt_tugas2.getText();
-                data[5] = txt_tugas3.getText();
-                data[6] = txt_uts.getText();
-                data[7] = txt_uas.getText();
-                data[8] = String.valueOf(nilaiAbsensi);
-                data[9] = String.valueOf(nilaiTugas);
-                data[10] = String.valueOf(nilaiUts);
-                data[11] = String.valueOf(nilaiUas);
-                data[12] = String.valueOf(nilaiAkhir);
-                data[13] = String.valueOf(index);
-                data[14] = ket;
+                    stt.executeUpdate(SQL);
+                    data[0] = nama.toString();
+                    data[1] = namaMk.toString();
+                    data[2] = txt_KodeMk.getText();
+                    data[3] = txt_tugas1.getText();
+                    data[4] = txt_tugas2.getText();
+                    data[5] = txt_tugas3.getText();
+                    data[6] = txt_uts.getText();
+                    data[7] = txt_uas.getText();
+                    data[8] = String.valueOf(nilaiAbsensi);
+                    data[9] = String.valueOf(nilaiTugas);
+                    data[10] = String.valueOf(nilaiUts);
+                    data[11] = String.valueOf(nilaiUas);
+                    data[12] = String.valueOf(nilaiAkhir);
+                    data[13] = String.valueOf(index);
+                    data[14] = ket;
 
-                tablemodel.insertRow(0, data);
-                stt.close();
-                kon.close();
-                membersihkan_teks();
-                btn_simpan.setEnabled(false);
-                nonaktif_teks();
+                    tablemodel.insertRow(0, data);
+                    stt.close();
+                    kon.close();
+                    membersihkan_teks();
+                    btn_simpan.setEnabled(false);
+                    nonaktif_teks();
             }
             catch(Exception ex){
                 JOptionPane.showMessageDialog(null,
                     ex.getMessage(),"ERROR",
                     JOptionPane.INFORMATION_MESSAGE);
             }
+        } else {
+            JOptionPane.showMessageDialog(null, "Kehadiran tidak boleh kurang dari 0 atau lebih dari 14 pertemuan!","ERROR",
+            JOptionPane.ERROR_MESSAGE);
+        }
+            
         }
     }//GEN-LAST:event_btn_simpanActionPerformed
 
