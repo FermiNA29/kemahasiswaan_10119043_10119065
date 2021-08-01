@@ -312,7 +312,7 @@ public class frm_simulasi_nilai extends javax.swing.JFrame {
      
      public boolean validation(){
          inisialisasiVariabel();
-         if(totKehadiran >= 0 || totKehadiran <= maksKehadiran){
+         if(totKehadiran >= 0 && totKehadiran <= maksKehadiran){
              return true;
          }else{
               JOptionPane.showMessageDialog(null, "Kehadiran tidak boleh kurang dari 0 atau lebih dari "+maksKehadiran+" pertemuan!","ERROR",

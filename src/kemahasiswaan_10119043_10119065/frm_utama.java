@@ -287,7 +287,6 @@ public class frm_utama extends javax.swing.JFrame {
         this.setVisible(false);
     }//GEN-LAST:event_btn_matkulActionPerformed
 
-
     /**
      * @param args the command line arguments
      */
