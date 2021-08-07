@@ -16,8 +16,10 @@ public class Kemahasiswaan_10119043_10119065 {
      */
     public static void main(String[] args) {
         // TODO code application logic here
-        frm_utama frm = new frm_utama();
-        frm.setVisible(true);
+//        frm_utama frm = new frm_utama();
+//        frm.setVisible(true);
+        frm_login flogin = new frm_login();
+        flogin.setVisible(true);
     }
     
 }

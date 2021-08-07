@@ -244,8 +244,8 @@ public class frm_simulasi_nilai extends javax.swing.JFrame {
          return keterangan;
      }
      
-     public Double hitungNilaiAbsen(int kehadiran,int maksKehadiran,double prest_absen){
-       Double result = Double.valueOf(((kehadiran/maksKehadiran)*100*(prest_absen/100))/100);
+     public Double hitungNilaiAbsen(double kehadiran,double maksKehadiran,double prest_absen){
+       Double result = Double.valueOf((((kehadiran/maksKehadiran)*100)*(prest_absen/100))/100);
        return result;
      }
      

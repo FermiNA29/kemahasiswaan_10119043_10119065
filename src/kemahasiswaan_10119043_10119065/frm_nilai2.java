@@ -731,7 +731,7 @@ public class frm_nilai2 extends javax.swing.JFrame {
                     + "`nilaiAbsen` = '"+nilaiAbsensi+"', "
                     + "`nilaiTugas` = '"+nilaiTugas+"', "
                     + "`nilaiUts` = '"+nilaiUts+"', "
-                    + "`nilaiUas` = '"+nilaiUas+"' "
+                    + "`nilaiUas` = '"+nilaiUas+"',"
                     + "`angkatan` = '"+txt_angkatan.getText()+"' "
                     + "WHERE "
                     + "`nim` ='"+txt_nim.getText()+"' AND `kd_mk` = '"+txt_KodeMk.getText()+"'; ";
