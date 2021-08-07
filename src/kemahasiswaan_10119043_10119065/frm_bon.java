@@ -591,6 +591,30 @@ public class frm_bon extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btn_ubahActionPerformed
 
+    public void insertItemNota(int noNota,int idBarang,int qty, int totalHarga){
+       try{
+           Class.forName(driver);
+                    Connection kon = DriverManager.getConnection(
+                        database,
+                        user,
+                        pass);
+                    Statement stt = kon.createStatement(); 
+        String QT_nota_item = "INSERT INTO `t_nota_item`(`noNota`,`idBarang`,`qty`,`totalHarga`) "
+                                    + "VALUES "
+                                    + "( '"+noNota+"', "
+                                    + " '" + idBarang + "', "
+                                    + " '" + qty + "', "
+                                    + " '" + totalHarga + "')";
+
+        stt.executeUpdate(QT_nota_item);
+       }catch(Exception ex){
+                JOptionPane.showMessageDialog(null,
+                    ex.getMessage(),"ERROR",
+                    JOptionPane.INFORMATION_MESSAGE);
+            }
+        
+    }
+    
     private void btnKonfirPembayaranActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnKonfirPembayaranActionPerformed
         // TODO add your handling code here:
         if(txt_bayar.getText().isEmpty() || txt_kembalian.getText().isEmpty() || txt_tagihan.getText().equals(0)){
@@ -606,7 +630,7 @@ public class frm_bon extends javax.swing.JFrame {
                     Statement stt = kon.createStatement();
                     String SQL = "SELECT *,t_keranjang.qty * t_barang.harga as \"Total Harga\" FROM `t_keranjang` JOIN t_barang ON t_keranjang.idBarang=t_barang.id";
                     ResultSet res = stt.executeQuery(SQL);
-                    tblModelKeranjang.getRowCount();
+                    int rowCart = tblModelKeranjang.getRowCount();
                     
                     if(res.next()){
                         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
@@ -617,27 +641,28 @@ public class frm_bon extends javax.swing.JFrame {
                             + " '" + bayar + "', "
                             + " '" + kembalian + "', "
                             + " '"+ waktuSkrng +"')";
-
-                        int newNota = stt.executeUpdate(QT_nota,Statement.RETURN_GENERATED_KEYS);
+                        stt.executeUpdate(QT_nota,Statement.RETURN_GENERATED_KEYS);
+                        ResultSet newNotaKey = stt.getGeneratedKeys();
+                        
+                        newNotaKey.next();
+                        int noNota=Integer.valueOf(newNotaKey.getString(1));
+                         String QT_nota_item = "INSERT INTO `t_nota_item`(`noNota`,`idBarang`,`qty`,`totalHarga`) VALUES ";
+                        int i = 0;
+                                ResultSet res2 = stt.executeQuery(SQL);
+                                res2.next();
                         do
                         {
-                            String QT_nota_item = "INSERT INTO `t_nota_item`(`noNota`,`idBarang`,`qty`,`totalHarga`) "
-                            + "VALUES "
-                            + "( '"+newNota+"', "
-                            + " '" + Integer.parseInt(res.getString(2)) + "', "
-                            + " '" + Integer.parseInt(res.getString(3)) + "', "
-                            + " '" + Integer.parseInt(res.getString(7)) + "')";
-
-                            stt.executeUpdate(QT_nota_item);
-//                            dataKeranjang[0] = res.getString(2);
-//                            dataKeranjang[1] = res.getString(5);
-//                            dataKeranjang[2] = res.getString(3);
-//                            dataKeranjang[3] = res.getString(7);
-//                            tblModelKeranjang.addRow(dataKeranjang);
-//
-//                            tagihan += Integer.valueOf(res.getString(7));
-                        }
-                        while (res.next());
+                           QT_nota_item += "( '"+noNota+"', '" + Integer.parseInt(res.getString(2)) + "', "
+                           + " '" + Integer.parseInt(res.getString(3)) + "', ";
+                           if((i+1) == rowCart){
+                                QT_nota_item += " '" + Integer.parseInt(res.getString(7)) + "')";
+                           }else{
+                                QT_nota_item += " '" + Integer.parseInt(res.getString(7)) + "'),";    
+                           }
+                         i++;
+                        }while (res.next());
+                        System.out.println(QT_nota_item);
+                        stt.executeUpdate(QT_nota_item);
                         String Qhpskeranjang = "DELETE FROM t_keranjang ";
                         stt.executeUpdate(Qhpskeranjang);
                     }
