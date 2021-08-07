@@ -750,7 +750,7 @@ public class frm_nilai2 extends javax.swing.JFrame {
                     data[11] = String.valueOf(nilaiUas);
                     data[12] = String.valueOf(nilaiAkhir);
                     data[13] = String.valueOf(index);
-    //                data[14] = ket;
+                    data[14] = ket;
                     tablemodel.removeRow(row);
                     tablemodel.insertRow(row, data);
                     stt.close();
@@ -847,7 +847,7 @@ public class frm_nilai2 extends javax.swing.JFrame {
                         user,
                         pass);
                     Statement stt = kon.createStatement();
-                    String SQL = "INSERT INTO `t_nilai`(`nim`,`kd_mk`,`nilai`,`index`,`ket`,`absensi`,`tugas1`,`tugas2`,`tugas3`,`uts`,`uas`,`nilaiAbsen`,`nilaiTugas`,`nilaiUts`,`nilaiUas`,'angkatan`) "
+                    String SQL = "INSERT INTO `t_nilai`(`nim`,`kd_mk`,`nilai`,`index`,`ket`,`absensi`,`tugas1`,`tugas2`,`tugas3`,`uts`,`uas`,`nilaiAbsen`,`nilaiTugas`,`nilaiUts`,`nilaiUas`,`-angkatan`) "
                     + "VALUES "
                     + "( '"+txt_nim.getText()+"', "
                     + " '"+txt_KodeMk.getText()+"', "
