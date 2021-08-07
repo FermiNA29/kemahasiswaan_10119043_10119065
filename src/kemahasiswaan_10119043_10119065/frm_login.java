@@ -53,7 +53,14 @@ public class frm_login extends javax.swing.JFrame {
                     frm_utama futama = new frm_utama();
                     futama.setVisible(true);
                     this.setVisible(false);
-
+                    Object[] options = {"OK"};
+                    int n = JOptionPane.showOptionDialog(null,
+                                      "Sukses Login ","Pesan",
+                                      JOptionPane.PLAIN_MESSAGE,
+                                      JOptionPane.QUESTION_MESSAGE,
+                                      null,
+                                      options,
+                                      options[0]);
                     this.dispose();
                 }else{
                     JOptionPane.showMessageDialog(null, "Username atau Kata Sandi Salah!", "Login Failed", 2);

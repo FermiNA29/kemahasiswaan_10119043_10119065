@@ -119,6 +119,11 @@ public class frm_utama extends javax.swing.JFrame {
         });
 
         btn_simulasi_kasus.setText("Simulasi Kasus");
+        btn_simulasi_kasus.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_simulasi_kasusActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -286,6 +291,13 @@ public class frm_utama extends javax.swing.JFrame {
         frm.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_btn_matkulActionPerformed
+
+    private void btn_simulasi_kasusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_simulasi_kasusActionPerformed
+        // TODO add your handling code here:
+        frm_bon fbon = new frm_bon();
+        fbon.setVisible(true);
+        this.setVisible(false);
+    }//GEN-LAST:event_btn_simulasi_kasusActionPerformed
 
     /**
      * @param args the command line arguments

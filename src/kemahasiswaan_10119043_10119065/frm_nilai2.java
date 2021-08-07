@@ -824,7 +824,6 @@ public class frm_nilai2 extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Data tidak boleh kosong. silahkan dilengkapi");
             comboNama.requestFocus();
         }else {
-////            double nilai = Double.valueOf(txtNilai.getText());
             if(Double.valueOf(txt_kehadiran.getText()) >= 0 && Double.valueOf(txt_kehadiran.getText()) <=14){
                 try{
                     double nilaiAbsensi = hitungAbsensi(Double.parseDouble(txt_kehadiran.getText()));
@@ -834,13 +833,6 @@ public class frm_nilai2 extends javax.swing.JFrame {
                     double nilaiAkhir = nilaiAbsensi + nilaiTugas + nilaiUts + nilaiUas;
                     char index = getIndex(nilaiAkhir);
                     String ket = getKeterangan(index, Double.parseDouble(txt_kehadiran.getText()));
-        //            System.out.println(nilaiAbsensi);
-        //            System.out.println(nilaiTugas);
-        //            System.out.println(nilaiUts);
-        //            System.out.println(nilaiUas);
-        //            System.out.println(nilaiAkhir);
-        //            System.out.println(index);
-        //            System.out.println(ket);
                     Class.forName(driver);
                     Connection kon = DriverManager.getConnection(
                         database,
@@ -927,7 +919,6 @@ public class frm_nilai2 extends javax.swing.JFrame {
             }
             
         } catch (Exception ex) {
-            System.err.println(ex.getMessage());
             JOptionPane.showMessageDialog(null, ex.getMessage(),"Error",
                     JOptionPane.INFORMATION_MESSAGE);
             System.exit(0);
