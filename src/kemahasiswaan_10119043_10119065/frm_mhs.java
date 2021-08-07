@@ -135,8 +135,9 @@ public class frm_mhs extends javax.swing.JFrame {
      public void tampil_field() throws ParseException{
          String tanggalTabel ="";
         tanggalTabel = tablemodel.getValueAt(row, 3).toString();
-        DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        Date tanggal = format.parse(tanggalTabel);
+        int index = table_mahasiiswa.getSelectedRow();
+        Date tanggal = new SimpleDateFormat("yyyy-MM-dd").parse((String)tablemodel.getValueAt(index, 3));
+//        Date tanggal = format.parse(tanggalTabel);
 //        String pattern = "yyyy-MM-dd"; 
 //        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);  
 //        String date = simpleDateFormat.format(new Date()); 
@@ -468,6 +469,7 @@ public class frm_mhs extends javax.swing.JFrame {
         // TODO add your handling code here:
         if(evt.getClickCount() == 1){
             try {
+//                int index = table_mahasiiswa.getSelectedRow();
                 tampil_field();
             } catch (ParseException ex) {
                 Logger.getLogger(frm_mhs.class.getName()).log(Level.SEVERE, null, ex);
@@ -496,7 +498,9 @@ public class frm_mhs extends javax.swing.JFrame {
         String nim = txt_nim.getText();
         String nama = txt_nama.getText();
         String tempat_lahir = txt_tempat_lahir.getText();
-//        String tgl_lahir = txt_tanggal_lahir.getText();
+        String tampilan = "yyyy-MM-dd";
+        SimpleDateFormat fm = new SimpleDateFormat(tampilan);
+        String tanggal = String.valueOf(fm.format(tglLahir.getDate()));
         String alamat = txt_alamat.getText();
 
         if((nim.isEmpty()) || (alamat.isEmpty())){
@@ -510,8 +514,9 @@ public class frm_mhs extends javax.swing.JFrame {
                 String SQL = "UPDATE t_mahasiswa "
                 + "SET `nim` = '"+nim+"', "
                 + "`nama` = '"+nama+"', "
+                + "`kelas` = 'IF2', "
                 +"`ttl` = '"+tempat_lahir+"', "
-//                + "`tgl_lahir` = '"+tgl_lahir+"', "
+                + "`tgl_lahir` = '"+tanggal+"', "
                 +"`alamat`  = '"+alamat+"' "
                 + "WHERE "
                 + "`nim` ='"+tablemodel.getValueAt(row, 0).toString()+"'; ";
@@ -519,7 +524,7 @@ public class frm_mhs extends javax.swing.JFrame {
                 data[0] = nim;
                 data[1] = nama;
                 data[2] = tempat_lahir;
-//                data[3] = tgl_lahir;
+                data[3] = tanggal;
                 data[4] = alamat;
                 tablemodel.removeRow(row);
                 tablemodel.insertRow(row, data);
@@ -574,12 +579,14 @@ public class frm_mhs extends javax.swing.JFrame {
                 Statement stt = kon.createStatement();
                 String SQL = "INSERT INTO t_mahasiswa(nim,"
                 + "nama,"
+                + "kelas,"
                 +"ttl,"
                 + "tgl_lahir,"
                 +"alamat) "
                 + "VALUES "
                 + "( '"+txt_nim.getText()+"', "
                 + " ' "+txt_nama.getText()+"',"
+                + " 'IF2',"
                 + "'"+txt_tempat_lahir.getText()+"', "
                 +"'"+tanggal+"',"
                 +"'"+txt_alamat.getText()+"')";
