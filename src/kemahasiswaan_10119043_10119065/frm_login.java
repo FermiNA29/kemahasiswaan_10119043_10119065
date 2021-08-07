@@ -1,5 +1,12 @@
 package kemahasiswaan_10119043_10119065;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import javax.swing.JOptionPane;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -11,14 +18,73 @@ package kemahasiswaan_10119043_10119065;
  * @author Fachriansyah PC
  */
 public class frm_login extends javax.swing.JFrame {
-
+    koneksi dbsetting;
+    String driver, database,user,pass,user_id,paswd;
+     
+    int gagalLogin = 0;
+    
     /**
      * Creates new form frm_login
      */
     public frm_login() {
         initComponents();
+        
+        dbsetting = new koneksi();
+        driver = dbsetting.SettingPanel("DBDriver");
+        database = dbsetting.SettingPanel("DBDatabase");
+        user = dbsetting.SettingPanel("DBUsername");
+        pass = dbsetting.SettingPanel("DBPassword");
     }
 
+    private void prosesLogin(){  
+        user_id = txt_userid.getText();
+        paswd = String.valueOf(txt_password.getPassword());   
+        if(!validateLogin()){
+            gagalLogin++;
+        }else{
+            try{
+                Class.forName(driver);
+                Connection kon = DriverManager.getConnection(database,user,pass);
+                Statement stt = kon.createStatement();
+                String query = "SELECT * FROM `pengguna` WHERE `username` = '"+user_id+"' "
+                        + "AND `password` ='"+paswd+"'";
+                ResultSet res = stt.executeQuery(query);
+                 if(res.next()){
+                    frm_utama futama = new frm_utama();
+                    futama.setVisible(true);
+                    this.setVisible(false);
+
+                    this.dispose();
+                }else{
+                    JOptionPane.showMessageDialog(null, "Username atau Kata Sandi Salah!", "Login Failed", 2);
+                    gagalLogin++;
+                 }
+
+                res.close();
+                stt.close();
+                kon.close();
+            }catch(Exception ex){
+                JOptionPane.showMessageDialog(null, ex.getMessage(),"Error",
+                        JOptionPane.INFORMATION_MESSAGE);
+                gagalLogin++;
+            }
+                    
+         }
+        if(gagalLogin == 3){
+            System.exit(0);
+        }
+        
+    }
+    
+    private boolean validateLogin(){
+        if (txt_userid.getText().isEmpty() || txt_password.getText().isEmpty()){
+            JOptionPane.showMessageDialog(null, "user id atau kata sandi tidak boleh kosong","Error",
+                    JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        return true;
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -32,10 +98,10 @@ public class frm_login extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         txt_userid = new javax.swing.JTextField();
-        txt_password = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         btn_login = new javax.swing.JButton();
         btn_daftar = new javax.swing.JButton();
+        txt_password = new javax.swing.JPasswordField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -49,8 +115,18 @@ public class frm_login extends javax.swing.JFrame {
         jLabel3.setText("Password");
 
         btn_login.setText("Login");
+        btn_login.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_loginActionPerformed(evt);
+            }
+        });
 
         btn_daftar.setText("daftar");
+        btn_daftar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_daftarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -64,10 +140,10 @@ public class frm_login extends javax.swing.JFrame {
                             .addComponent(jLabel1)
                             .addComponent(jLabel3))
                         .addGap(51, 51, 51)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txt_password, javax.swing.GroupLayout.PREFERRED_SIZE, 217, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jLabel2)
-                            .addComponent(txt_userid, javax.swing.GroupLayout.PREFERRED_SIZE, 217, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(txt_userid, javax.swing.GroupLayout.DEFAULT_SIZE, 217, Short.MAX_VALUE)
+                            .addComponent(txt_password)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(93, 93, 93)
                         .addComponent(btn_login, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -89,11 +165,11 @@ public class frm_login extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
                     .addComponent(txt_password, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(40, 40, 40)
+                .addGap(37, 37, 37)
                 .addComponent(btn_login, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(btn_daftar)
-                .addContainerGap(24, Short.MAX_VALUE))
+                .addContainerGap(27, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -109,6 +185,18 @@ public class frm_login extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btn_loginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_loginActionPerformed
+        // TODO add your handling code here:
+        prosesLogin();
+    }//GEN-LAST:event_btn_loginActionPerformed
+
+    private void btn_daftarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_daftarActionPerformed
+        // TODO add your handling code here:
+        frm_register fregis = new frm_register();
+        fregis.setVisible(true);
+        this.setVisible(false);
+    }//GEN-LAST:event_btn_daftarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -152,7 +240,7 @@ public class frm_login extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JTextField txt_password;
+    private javax.swing.JPasswordField txt_password;
     private javax.swing.JTextField txt_userid;
     // End of variables declaration//GEN-END:variables
 }
