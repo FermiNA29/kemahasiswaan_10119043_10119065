@@ -258,8 +258,18 @@ public class frm_matkul extends javax.swing.JFrame {
         });
 
         btn_batal.setText("Batal");
+        btn_batal.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_batalActionPerformed(evt);
+            }
+        });
 
         btn_keluar.setText("Keluar");
+        btn_keluar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_keluarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -357,6 +367,7 @@ public class frm_matkul extends javax.swing.JFrame {
         membersihkan_teks();
         txt_kodemk.requestFocus();
         btn_simpan.setEnabled(true);
+        btn_batal.setEnabled(true);
         btn_ubah.setEnabled(false);
         btn_hapus.setEnabled(false);
         btn_keluar.setEnabled(false);
@@ -400,21 +411,27 @@ public class frm_matkul extends javax.swing.JFrame {
 
     private void btn_hapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_hapusActionPerformed
         // TODO add your handling code here:
-        try{
-            Class.forName(driver);
-            Connection kon = DriverManager.getConnection(database,user,pass);
-            Statement stt = kon.createStatement();
-            String  SQL = "DELETE FROM t_mata_kuliah "
-            + " where "
-            + " kd_mk = '"+tablemodel.getValueAt(row, 0).toString()+"'";
-            stt.executeUpdate(SQL);
-            tablemodel.removeRow(row);
-            stt.close();
-            kon.close();
-            membersihkan_teks();
-        }catch(Exception ex){
-            System.err.println(ex.getMessage());
+        if((txt_kodemk.getText().isEmpty()) || (txt_namamk.getText().isEmpty())){
+            JOptionPane.showMessageDialog(null, "Pilih mahasiswa terlebih dahulu!");
+            txt_kodemk.requestFocus();
+        }else{
+            try{
+                Class.forName(driver);
+                Connection kon = DriverManager.getConnection(database,user,pass);
+                Statement stt = kon.createStatement();
+                String  SQL = "DELETE FROM t_mata_kuliah "
+                + " where "
+                + " kd_mk = '"+tablemodel.getValueAt(row, 0).toString()+"'";
+                stt.executeUpdate(SQL);
+                tablemodel.removeRow(row);
+                stt.close();
+                kon.close();
+                membersihkan_teks();
+            }catch(Exception ex){
+                System.err.println(ex.getMessage());
+            }
         }
+        
     }//GEN-LAST:event_btn_hapusActionPerformed
 
     private void btn_simpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_simpanActionPerformed
@@ -494,6 +511,23 @@ public class frm_matkul extends javax.swing.JFrame {
         frm_utama frm = new frm_utama();
         frm.setVisible(true);
     }//GEN-LAST:event_formWindowClosed
+
+    private void btn_batalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_batalActionPerformed
+        // TODO add your handling code here:
+        membersihkan_teks();
+        btn_simpan.setEnabled(true);
+        btn_ubah.setEnabled(true);
+        btn_hapus.setEnabled(true);
+        btn_keluar.setEnabled(true);
+        aktif_teks();
+    }//GEN-LAST:event_btn_batalActionPerformed
+
+    private void btn_keluarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_keluarActionPerformed
+        // TODO add your handling code here:
+        frm_utama futama = new frm_utama();
+        futama.setVisible(true);
+        this.setVisible(false);
+    }//GEN-LAST:event_btn_keluarActionPerformed
 
     /**
      * @param args the command line arguments

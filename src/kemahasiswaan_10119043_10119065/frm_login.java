@@ -55,7 +55,7 @@ public class frm_login extends javax.swing.JFrame {
                     this.setVisible(false);
                     Object[] options = {"OK"};
                     int n = JOptionPane.showOptionDialog(null,
-                                      "Sukses Login ","Pesan",
+                                      "Berhasil Masuk ","Pesan",
                                       JOptionPane.PLAIN_MESSAGE,
                                       JOptionPane.QUESTION_MESSAGE,
                                       null,
@@ -63,7 +63,7 @@ public class frm_login extends javax.swing.JFrame {
                                       options[0]);
                     this.dispose();
                 }else{
-                    JOptionPane.showMessageDialog(null, "Username atau Kata Sandi Salah!", "Login Failed", 2);
+                    JOptionPane.showMessageDialog(null, "Nama pengguna dan password tidak ditemukan silahkan daftar!", "Login Failed", 2);
                     gagalLogin++;
                  }
 
@@ -84,8 +84,8 @@ public class frm_login extends javax.swing.JFrame {
     }
     
     private boolean validateLogin(){
-        if (txt_userid.getText().isEmpty() || txt_password.getText().isEmpty()){
-            JOptionPane.showMessageDialog(null, "user id atau kata sandi tidak boleh kosong","Error",
+        if (txt_userid.getText().isEmpty() || txt_password.getPassword().length == 0){
+            JOptionPane.showMessageDialog(null, "Nama pengguna atau kata sandi tidak boleh kosong!","Error",
                     JOptionPane.ERROR_MESSAGE);
             return false;
         }
@@ -113,7 +113,7 @@ public class frm_login extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jLabel1.setText("User id");
+        jLabel1.setText("Nama Pengguna");
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel2.setText("Form Login");
@@ -121,14 +121,14 @@ public class frm_login extends javax.swing.JFrame {
         jLabel3.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel3.setText("Password");
 
-        btn_login.setText("Login");
+        btn_login.setText("Masuk");
         btn_login.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_loginActionPerformed(evt);
             }
         });
 
-        btn_daftar.setText("daftar");
+        btn_daftar.setText("Daftar");
         btn_daftar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_daftarActionPerformed(evt);
@@ -152,9 +152,9 @@ public class frm_login extends javax.swing.JFrame {
                             .addComponent(txt_userid, javax.swing.GroupLayout.DEFAULT_SIZE, 217, Short.MAX_VALUE)
                             .addComponent(txt_password)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(131, 131, 131)
+                        .addGap(140, 140, 140)
                         .addComponent(btn_login, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
+                        .addGap(93, 93, 93)
                         .addComponent(btn_daftar, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(53, Short.MAX_VALUE))
         );

@@ -310,6 +310,16 @@ public class frm_simulasi_nilai extends javax.swing.JFrame {
      }
      
      public boolean validation(){
+         if(comboMK.getSelectedIndex() == 0 || txt_perst_absen.getText().isEmpty()
+                 || txt_perst_tugas.getText().isEmpty() || txt_perst_uas.getText().isEmpty()
+                 || txt_perst_uts.getText().isEmpty() || txt_tugas1.getText().isEmpty() ||
+                 txt_tugas2.getText().isEmpty() || txt_tugas3.getText().isEmpty() ||
+                 txt_uas.getText().isEmpty() || txt_uts.getText().isEmpty() || txt_kehadiran.getText().isEmpty()
+                 || txt_kodemk.getText().isEmpty()){
+            JOptionPane.showMessageDialog(null, "Data tidak boleh kosong!","ERROR",
+                JOptionPane.ERROR_MESSAGE); 
+            return false;
+         }
          inisialisasiVariabel();
          if(totKehadiran >= 0 && totKehadiran <= maksKehadiran){
              return true;
@@ -559,34 +569,36 @@ public class frm_simulasi_nilai extends javax.swing.JFrame {
                                         .addComponent(txt_perst_uas, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(jLabel11)))))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 170, Short.MAX_VALUE)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addGroup(jPanel1Layout.createSequentialGroup()
-                                    .addComponent(jLabel12)
-                                    .addGap(80, 80, 80)
-                                    .addComponent(txt_kehadiran, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGroup(jPanel1Layout.createSequentialGroup()
-                                    .addComponent(jLabel14)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(txt_tugas1, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGroup(jPanel1Layout.createSequentialGroup()
-                                    .addComponent(jLabel15)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(txt_tugas2, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
-                                    .addComponent(jLabel17)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(txt_uts, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(jLabel18)
                                 .addGap(117, 117, 117)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(txt_tugas3, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(txt_uas, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addComponent(jLabel16))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jLabel13))))
+                            .addComponent(jLabel16)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addComponent(jLabel12)
+                                        .addGap(80, 80, 80)
+                                        .addComponent(txt_kehadiran, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addComponent(jLabel14)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(txt_tugas1, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addComponent(jLabel15)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(txt_tugas2, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                                        .addComponent(jLabel17)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(txt_uts, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel13)))
+                        .addGap(24, 24, 24))))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(btn_tambah, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -623,8 +635,7 @@ public class frm_simulasi_nilai extends javax.swing.JFrame {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel4)
                             .addComponent(txt_perst_absen, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel5)
-                            .addComponent(jLabel13))
+                            .addComponent(jLabel5))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel6)
@@ -643,7 +654,8 @@ public class frm_simulasi_nilai extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel12)
-                            .addComponent(txt_kehadiran, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(txt_kehadiran, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel13))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel14)
@@ -712,32 +724,53 @@ public class frm_simulasi_nilai extends javax.swing.JFrame {
 
     private void btn_ubahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_ubahActionPerformed
         // TODO add your handling code here:
-       try{
-            addToTableAction();
-            if(validation()){
-                tablemodel.removeRow(row);
-                tablemodel.insertRow(row, data);
-
-                membersihkan_teks();
-                btn_simpan.setEnabled(false);
-                nonaktif_teks();
-            }
-         }
-         catch(Exception ex){
-              JOptionPane.showMessageDialog(null, ex.getMessage(),"ERROR",
+        if(comboMK.getSelectedIndex() == 0 || txt_perst_absen.getText().isEmpty()
+                 || txt_perst_tugas.getText().isEmpty() || txt_perst_uas.getText().isEmpty()
+                 || txt_perst_uts.getText().isEmpty() || txt_tugas1.getText().isEmpty() ||
+                 txt_tugas2.getText().isEmpty() || txt_tugas3.getText().isEmpty() ||
+                 txt_uas.getText().isEmpty() || txt_uts.getText().isEmpty() || txt_kehadiran.getText().isEmpty()
+                 || txt_kodemk.getText().isEmpty()){
+            JOptionPane.showMessageDialog(null, "Data tidak boleh kosong!","ERROR",
                 JOptionPane.ERROR_MESSAGE);
-         }
+         }else{
+            try{
+                addToTableAction();
+                if(validation()){
+                    tablemodel.removeRow(row);
+                    tablemodel.insertRow(row, data);
+
+                    membersihkan_teks();
+                    btn_simpan.setEnabled(false);
+                    nonaktif_teks();
+                }
+             }
+             catch(Exception ex){
+                  JOptionPane.showMessageDialog(null, ex.getMessage(),"ERROR",
+                    JOptionPane.ERROR_MESSAGE);
+             }
+        }
     }//GEN-LAST:event_btn_ubahActionPerformed
 
     private void btn_hapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_hapusActionPerformed
         // TODO add your handling code here:
-        try{
-            tablemodel.removeRow(row);
-            membersihkan_teks();
-        }catch(Exception ex){
-            JOptionPane.showMessageDialog(null, ex.getMessage(),"ERROR",
+        if(comboMK.getSelectedIndex() == 0 || txt_perst_absen.getText().isEmpty()
+                 || txt_perst_tugas.getText().isEmpty() || txt_perst_uas.getText().isEmpty()
+                 || txt_perst_uts.getText().isEmpty() || txt_tugas1.getText().isEmpty() ||
+                 txt_tugas2.getText().isEmpty() || txt_tugas3.getText().isEmpty() ||
+                 txt_uas.getText().isEmpty() || txt_uts.getText().isEmpty() || txt_kehadiran.getText().isEmpty()
+                 || txt_kodemk.getText().isEmpty()){
+            JOptionPane.showMessageDialog(null, "Pilih data pada tabel terlebih dahulu!","ERROR",
                 JOptionPane.ERROR_MESSAGE);
+         }else{
+            try{
+                tablemodel.removeRow(row);
+                membersihkan_teks();
+            }catch(Exception ex){
+                JOptionPane.showMessageDialog(null, ex.getMessage(),"ERROR",
+                    JOptionPane.ERROR_MESSAGE);
+            }
         }
+        
     }//GEN-LAST:event_btn_hapusActionPerformed
 
     private void btn_simpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_simpanActionPerformed

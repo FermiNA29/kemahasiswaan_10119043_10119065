@@ -98,9 +98,6 @@ public class frm_mhs extends javax.swing.JFrame {
     public void membersihkan_teks(){
         txt_nim.setText("");
         txt_nama.setText("");
-//        txt_tanggal_lahir.setText("");
-//        tglLahir.setDateFormatString("");
-//        tglLahir.setDateFormatString(null);
         tglLahir.setDate(null);
         txt_tempat_lahir.setText("");
         txt_alamat.setText("");
@@ -109,7 +106,6 @@ public class frm_mhs extends javax.swing.JFrame {
     public void membersihkan_teks2(){
         txt_nim.setText("");
         txt_nama.setText("");
-//        txt_tanggal_lahir.setText("");
         tglLahir.setDateFormatString("");
         txt_tempat_lahir.setText("");
         txt_alamat.setText("");
@@ -137,17 +133,10 @@ public class frm_mhs extends javax.swing.JFrame {
         tanggalTabel = tablemodel.getValueAt(row, 3).toString();
         int index = table_mahasiiswa.getSelectedRow();
         Date tanggal = new SimpleDateFormat("yyyy-MM-dd").parse((String)tablemodel.getValueAt(index, 3));
-//        Date tanggal = format.parse(tanggalTabel);
-//        String pattern = "yyyy-MM-dd"; 
-//        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);  
-//        String date = simpleDateFormat.format(new Date()); 
-//        System.out.println(date);
-        System.out.println(tanggal);
          row = table_mahasiiswa.getSelectedRow();
          txt_nim.setText(tablemodel.getValueAt(row, 0).toString());
          txt_nama.setText(tablemodel.getValueAt(row, 1).toString());
          txt_tempat_lahir.setText(tablemodel.getValueAt(row, 2).toString());
-//         tglLahir.setDate(tablemodel.getValueAt(row, 3).toString());
         tglLahir.setDate(tanggal);
          txt_alamat.setText(tablemodel.getValueAt(row, 4).toString());
          btn_simpan.setEnabled(false);
@@ -303,8 +292,18 @@ public class frm_mhs extends javax.swing.JFrame {
         });
 
         btn_batal.setText("Batal");
+        btn_batal.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_batalActionPerformed(evt);
+            }
+        });
 
         btn_keluar.setText("Keluar");
+        btn_keluar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_keluarActionPerformed(evt);
+            }
+        });
 
         jLabel7.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel7.setText("(yyyy-mm-dd)");
@@ -461,7 +460,6 @@ public class frm_mhs extends javax.swing.JFrame {
         // TODO add your handling code here:
         if(evt.getClickCount() == 1){
             try {
-//                int index = table_mahasiiswa.getSelectedRow();
                 tampil_field();
             } catch (ParseException ex) {
                 Logger.getLogger(frm_mhs.class.getName()).log(Level.SEVERE, null, ex);
@@ -487,19 +485,20 @@ public class frm_mhs extends javax.swing.JFrame {
 
     private void btn_ubahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_ubahActionPerformed
         // TODO add your handling code here:
-        String nim = txt_nim.getText();
-        String nama = txt_nama.getText();
-        String tempat_lahir = txt_tempat_lahir.getText();
-        String tampilan = "yyyy-MM-dd";
-        SimpleDateFormat fm = new SimpleDateFormat(tampilan);
-        String tanggal = String.valueOf(fm.format(tglLahir.getDate()));
-        String alamat = txt_alamat.getText();
 
-        if((nim.isEmpty()) || (alamat.isEmpty())){
+        if(txt_nim.getText().isEmpty() || txt_nama.getText().isEmpty() 
+                || txt_tempat_lahir.getText().isEmpty() || txt_alamat.getText().isEmpty()){
             JOptionPane.showMessageDialog(null, "Data tidak boleh kosong, silahkan dilengkapi");
             txt_nim.requestFocus();
         }else{
             try{
+                String nim = txt_nim.getText();
+                String nama = txt_nama.getText();
+                String tempat_lahir = txt_tempat_lahir.getText();
+                String tampilan = "yyyy-MM-dd";
+                SimpleDateFormat fm = new SimpleDateFormat(tampilan);
+                String tanggal = String.valueOf(fm.format(tglLahir.getDate()));
+                String alamat = txt_alamat.getText();
                 Class.forName(driver);
                 Connection kon = DriverManager.getConnection(database,user,pass);
                 Statement stt = kon.createStatement();
@@ -534,21 +533,30 @@ public class frm_mhs extends javax.swing.JFrame {
 
     private void btn_hapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_hapusActionPerformed
         // TODO add your handling code here:
-        try{
-            Class.forName(driver);
-            Connection kon = DriverManager.getConnection(database,user,pass);
-            Statement stt = kon.createStatement();
-            String  SQL = "DELETE FROM t_mahasiswa "
-            + " where "
-            + " nim = '"+tablemodel.getValueAt(row, 0).toString()+"'";
-            stt.executeUpdate(SQL);
-            tablemodel.removeRow(row);
-            stt.close();
-            kon.close();
-            membersihkan_teks();
-        }catch(Exception ex){
-            System.err.println(ex.getMessage());
+        if(txt_nim.getText().isEmpty() || txt_nama.getText().isEmpty() 
+                || txt_tempat_lahir.getText().isEmpty() || txt_alamat.getText().isEmpty()){
+            JOptionPane.showMessageDialog(null, "pilih mahasiswa terlebih dahulu!");
+            txt_nim.requestFocus();
+        }else{
+            try{
+                Class.forName(driver);
+                Connection kon = DriverManager.getConnection(database,user,pass);
+                Statement stt = kon.createStatement();
+                String  SQL = "DELETE FROM t_mahasiswa "
+                + " where "
+                + " nim = '"+tablemodel.getValueAt(row, 0).toString()+"'";
+                stt.executeUpdate(SQL);
+                tablemodel.removeRow(row);
+                stt.close();
+                kon.close();
+                membersihkan_teks();
+                btn_simpan.setEnabled(true);
+                btn_batal.setEnabled(true);
+            }catch(Exception ex){
+                System.err.println(ex.getMessage());
+            }
         }
+        
     }//GEN-LAST:event_btn_hapusActionPerformed
 
     private void btn_simpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_simpanActionPerformed
@@ -556,12 +564,12 @@ public class frm_mhs extends javax.swing.JFrame {
         String data[] = new String[5];
         String tampilan = "yyyy-MM-dd";
         SimpleDateFormat fm = new SimpleDateFormat(tampilan);
-        String tanggal = String.valueOf(fm.format(tglLahir.getDate()));
-        System.out.println(tanggal);
-        if((txt_nim.getText().isEmpty())){
+        if(txt_nim.getText().isEmpty() || txt_nama.getText().isEmpty() 
+                || txt_tempat_lahir.getText().isEmpty() || txt_alamat.getText().isEmpty()){
             JOptionPane.showMessageDialog(null, "Data tidak boleh kosong. silahkan dilengkapi");
             txt_nim.requestFocus();
         }else{
+            String tanggal = String.valueOf(fm.format(tglLahir.getDate()));
             try{
                 Class.forName(driver);
                 Connection kon = DriverManager.getConnection(
@@ -645,6 +653,23 @@ public class frm_mhs extends javax.swing.JFrame {
         frm_utama frm = new frm_utama();
         frm.setVisible(true);
     }//GEN-LAST:event_formWindowClosed
+
+    private void btn_keluarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_keluarActionPerformed
+        // TODO add your handling code here:
+        frm_utama futama = new frm_utama();
+        futama.setVisible(true);
+        this.setVisible(false);
+    }//GEN-LAST:event_btn_keluarActionPerformed
+
+    private void btn_batalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_batalActionPerformed
+        // TODO add your handling code here:
+        membersihkan_teks();
+        aktif_teks();
+        btn_simpan.setEnabled(true);
+        btn_hapus.setEnabled(true);
+        btn_keluar.setEnabled(true);
+        btn_ubah.setEnabled(true);
+    }//GEN-LAST:event_btn_batalActionPerformed
 
     /**
      * @param args the command line arguments

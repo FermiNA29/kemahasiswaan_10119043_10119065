@@ -540,8 +540,18 @@ public class frm_nilai2 extends javax.swing.JFrame {
         });
 
         btn_batal.setText("Batal");
+        btn_batal.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_batalActionPerformed(evt);
+            }
+        });
 
         btn_keluar.setText("Keluar");
+        btn_keluar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_keluarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -617,7 +627,7 @@ public class frm_nilai2 extends javax.swing.JFrame {
                                 .addGap(45, 45, 45)
                                 .addComponent(btn_keluar))
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 1015, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 37, Short.MAX_VALUE))))
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -999,6 +1009,23 @@ public class frm_nilai2 extends javax.swing.JFrame {
         frm_utama frm = new frm_utama();
         frm.setVisible(true);
     }//GEN-LAST:event_formWindowClosed
+
+    private void btn_batalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_batalActionPerformed
+        // TODO add your handling code here:
+        membersihkan_teks();
+        aktif_teks();
+        btn_simpan.setEnabled(true);
+        btn_hapus.setEnabled(true);
+        btn_keluar.setEnabled(true);
+        btn_ubah.setEnabled(true);
+    }//GEN-LAST:event_btn_batalActionPerformed
+
+    private void btn_keluarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_keluarActionPerformed
+        // TODO add your handling code here:
+        frm_utama futama = new frm_utama();
+        futama.setVisible(true);
+        this.setVisible(false);
+    }//GEN-LAST:event_btn_keluarActionPerformed
 
     /**
      * @param args the command line arguments

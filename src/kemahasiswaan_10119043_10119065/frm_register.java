@@ -51,7 +51,7 @@ public class frm_register extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(null, "Registrasi Akun Berhasil Dilakukan","Success",
                         JOptionPane.INFORMATION_MESSAGE);
             }else{
-                JOptionPane.showMessageDialog(null, "Username Sudah Digunakan!","Failed",
+                JOptionPane.showMessageDialog(null, "Nama Pengguna Sudah Digunakan!","Failed",
                         JOptionPane.INFORMATION_MESSAGE);
             }
         }catch(Exception ex){
@@ -86,7 +86,7 @@ public class frm_register extends javax.swing.JFrame {
         jLabel2.setText("Form Daftar");
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jLabel1.setText("User id");
+        jLabel1.setText("Nama Pengguna");
 
         jLabel3.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel3.setText("Password");
@@ -133,7 +133,7 @@ public class frm_register extends javax.swing.JFrame {
                             .addComponent(txt_password, javax.swing.GroupLayout.PREFERRED_SIZE, 217, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel2)
                             .addComponent(txt_userid, javax.swing.GroupLayout.PREFERRED_SIZE, 217, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(33, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
