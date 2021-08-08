@@ -36,8 +36,10 @@ public class frm_bon extends javax.swing.JFrame {
         
         tbl_barang.setModel(tblModelBarang);
         tbl_keranjang.setModel(tblModelKeranjang);
+        tbl_pembelian.setModel(tblModelNota);
         settablebarangload();
         settablekeranjangload();
+        settablenotaload();
         btn_ubah.setEnabled(false);
         btn_hapus.setEnabled(false);
         txt_tagihan.setEditable(false);
@@ -97,8 +99,36 @@ public class frm_bon extends javax.swing.JFrame {
         };
     }
     
+    private javax.swing.table.DefaultTableModel tblModelNota = getDefaultTableModelNota();
+    private javax.swing.table.DefaultTableModel getDefaultTableModelNota(){
+        return new javax.swing.table.DefaultTableModel(
+        new Object[][]{},
+        new String [] {
+            "No Nota",
+            "Id Barang",
+            "Nama Barang",
+            "Qty",
+            "Total Harga",
+            "Tanggal Transaksi",
+        }
+        )
+    
+        {
+            boolean[] canEdit = new boolean[]
+            {
+                false,false,false,false,false,false
+            };
+            
+            public boolean isCellEditable(int rowIndex, int columnIndex)
+            {
+                return canEdit[columnIndex];
+            }
+        };
+    }
+    
     String dataBarang[]=new String[3];
     String dataKeranjang[]=new String[5];
+    String dataNota[] = new String[9];
     
     private void settablebarangload(){
         String stat = "";
@@ -133,7 +163,6 @@ public class frm_bon extends javax.swing.JFrame {
             Statement stt = kon.createStatement();
             String SQL = "SELECT *,t_keranjang.qty * t_barang.harga as \"Total Harga\" FROM `t_keranjang` JOIN t_barang ON t_keranjang.idBarang=t_barang.id";
             ResultSet res = stt.executeQuery(SQL);
-            tblModelKeranjang.getRowCount();
             tagihan = 0;
             for (int i = tblModelKeranjang.getRowCount() - 1; i >= 0; i--) {
                 tblModelKeranjang.removeRow(i);
@@ -160,6 +189,39 @@ public class frm_bon extends javax.swing.JFrame {
         }
     }
     
+    private void settablenotaload(){
+        String stat = "";
+        try{
+            Class.forName(driver);
+            Connection kon = DriverManager.getConnection(database,user,pass);
+            Statement stt = kon.createStatement();
+            String SQL = "select * from `t_nota_item` "
+                    +"JOIN `t_nota` ON `t_nota_item`.`noNota` = `t_nota`.`noNota` "
+                    +"JOIN `t_barang` ON `t_nota_item`.`idBarang` = `t_barang`.`id`";
+            ResultSet res = stt.executeQuery(SQL);
+            for (int i = tblModelNota.getRowCount() - 1; i >= 0; i--) {
+                tblModelNota.removeRow(i);
+            }
+            while(res.next()){
+                dataNota[0] = res.getString(2);
+                dataNota[1] = res.getString(3);
+                dataNota[2] = res.getString(12);
+                dataNota[3] = res.getString(4);
+                dataNota[4] = res.getString(5);
+                dataNota[5] = res.getString(10);
+                tblModelNota.addRow(dataNota);
+            }
+            res.close();
+            stt.close();
+            kon.close();
+        }catch(Exception ex){
+            System.err.println(ex.getMessage());
+            JOptionPane.showMessageDialog(null, ex.getMessage(),"Error",
+                    JOptionPane.INFORMATION_MESSAGE);
+            System.exit(0);
+        }
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -172,8 +234,6 @@ public class frm_bon extends javax.swing.JFrame {
         jTextField1 = new javax.swing.JTextField();
         jRadioButton1 = new javax.swing.JRadioButton();
         jPanel1 = new javax.swing.JPanel();
-        jPanel2 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tbl_barang = new javax.swing.JTable();
         jLabel3 = new javax.swing.JLabel();
@@ -195,39 +255,18 @@ public class frm_bon extends javax.swing.JFrame {
         txt_kembalian = new javax.swing.JTextField();
         btnKonfirPembayaran = new javax.swing.JButton();
         btn_hapusall = new javax.swing.JButton();
+        jPanel4 = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
         tbl_pembelian = new javax.swing.JTable();
         jLabel10 = new javax.swing.JLabel();
+        jPanel2 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
 
         jTextField1.setText("jTextField1");
 
         jRadioButton1.setText("jRadioButton1");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
-        jPanel2.setBackground(new java.awt.Color(102, 102, 102));
-
-        jLabel1.setBackground(new java.awt.Color(255, 255, 255));
-        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel1.setText("FORM KASUS");
-
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(283, 283, 283)
-                .addComponent(jLabel1)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(43, 43, 43)
-                .addComponent(jLabel1)
-                .addContainerGap(44, Short.MAX_VALUE))
-        );
 
         tbl_barang.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -251,7 +290,7 @@ public class frm_bon extends javax.swing.JFrame {
         jLabel3.setText("Daftar Barang");
 
         jLabel4.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-        jLabel4.setText("Pembelian");
+        jLabel4.setText("Keranjang");
 
         tbl_keranjang.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -293,7 +332,6 @@ public class frm_bon extends javax.swing.JFrame {
         });
 
         btn_hapus.setText("Hapus");
-        btn_hapus.setActionCommand("Hapus");
         btn_hapus.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_hapusActionPerformed(evt);
@@ -318,7 +356,7 @@ public class frm_bon extends javax.swing.JFrame {
                         .addComponent(btn_ubah)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(btn_hapus)))
-                .addContainerGap(176, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -341,6 +379,9 @@ public class frm_bon extends javax.swing.JFrame {
         txt_bayar.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 txt_bayarKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txt_bayarKeyReleased(evt);
             }
         });
 
@@ -368,21 +409,9 @@ public class frm_bon extends javax.swing.JFrame {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jPanel3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 709, Short.MAX_VALUE)
-                            .addComponent(jScrollPane2)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel3)
-                                    .addComponent(jLabel4))
-                                .addGap(0, 0, Short.MAX_VALUE)))
-                        .addContainerGap())
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel7)
@@ -395,23 +424,37 @@ public class frm_bon extends javax.swing.JFrame {
                             .addComponent(txt_kembalian, javax.swing.GroupLayout.DEFAULT_SIZE, 189, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btn_hapusall, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(20, 20, 20))))
+                        .addGap(20, 20, 20))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel4)
+                                .addGap(0, 0, Short.MAX_VALUE)))
+                        .addContainerGap())
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel3)
+                                .addGap(0, 0, Short.MAX_VALUE)))
+                        .addContainerGap())))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnKonfirPembayaran)
-                .addGap(281, 281, 281))
+                .addGap(191, 191, 191))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addContainerGap()
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 214, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 174, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -430,7 +473,7 @@ public class frm_bon extends javax.swing.JFrame {
                     .addComponent(txt_kembalian, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(btnKonfirPembayaran)
-                .addContainerGap(131, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         tbl_pembelian.setModel(new javax.swing.table.DefaultTableModel(
@@ -447,7 +490,51 @@ public class frm_bon extends javax.swing.JFrame {
         jScrollPane3.setViewportView(tbl_pembelian);
 
         jLabel10.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-        jLabel10.setText("Daftar Pembelian");
+        jLabel10.setText("Nota Pembelian");
+
+        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel10)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 661, Short.MAX_VALUE)
+        );
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addGap(17, 17, 17)
+                .addComponent(jLabel10)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(68, Short.MAX_VALUE))
+        );
+
+        jPanel2.setBackground(new java.awt.Color(102, 102, 102));
+
+        jLabel1.setBackground(new java.awt.Color(255, 255, 255));
+        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel1.setText("FORM KASUS");
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(519, 519, 519)
+                .addComponent(jLabel1)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addContainerGap(44, Short.MAX_VALUE)
+                .addComponent(jLabel1)
+                .addGap(43, 43, 43))
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -455,81 +542,223 @@ public class frm_bon extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel10)
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(53, 53, 53)
-                .addComponent(jLabel10)
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 84, Short.MAX_VALUE))
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(3, 3, 3)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void tbl_barangMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbl_barangMouseClicked
+    private void btn_hapusallActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_hapusallActionPerformed
         // TODO add your handling code here:
-        if(evt.getClickCount() == 2){
-            row = tbl_barang.getSelectedRow();
-            idBarang = tblModelBarang.getValueAt(row, 0).toString();
-            jLabel2.setText(tblModelBarang.getValueAt(row, 1).toString());
+        try{
+            Class.forName(driver);
+            Connection kon = DriverManager.getConnection(database,user,pass);
+            Statement stt = kon.createStatement();
+            String  SQL = "DELETE FROM t_keranjang ";
+            stt.executeUpdate(SQL);
+            tblModelKeranjang.removeRow(row);
+            JOptionPane.showMessageDialog(null,"Berhasil Hapus Semua Barang Dari Keranjang","Pesan",
+                JOptionPane.INFORMATION_MESSAGE);
+            stt.close();
+            kon.close();
+            settablekeranjangload();
+            membersihkan_input_kekeranjang();
+            btn_ubah.setEnabled(false);
+            btn_hapus.setEnabled(false);
+        }catch(Exception ex){
+            System.err.println(ex.getMessage());
         }
-    }//GEN-LAST:event_tbl_barangMouseClicked
+    }//GEN-LAST:event_btn_hapusallActionPerformed
+
+    private void btnKonfirPembayaranActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnKonfirPembayaranActionPerformed
+        // TODO add your handling code here:
+        if(txt_bayar.getText().isEmpty() || txt_kembalian.getText().isEmpty() || txt_tagihan.getText().equals(0)){
+            JOptionPane.showMessageDialog(null, "Data Tidak Boleh Kosong","Error",
+                JOptionPane.INFORMATION_MESSAGE);
+        }else{
+            try{
+                Class.forName(driver);
+                Connection kon = DriverManager.getConnection(
+                    database,
+                    user,
+                    pass);
+                Statement stt = kon.createStatement();
+                String SQL = "SELECT *,t_keranjang.qty * t_barang.harga as `Total Harga` FROM `t_keranjang` JOIN t_barang ON t_keranjang.idBarang=t_barang.id";
+                ResultSet res = stt.executeQuery(SQL);
+                int rowCart = tblModelKeranjang.getRowCount();
+                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+                LocalDateTime waktuSkrng = LocalDateTime.now();
+                String QT_nota = "INSERT INTO `t_nota`(`total`,`bayar`,`kembalian`,`tglTransaksi`) "
+                + "VALUES "
+                + "( '"+tagihan+"', "
+                + " '" + bayar + "', "
+                + " '" + kembalian + "', "
+                + " '"+ waktuSkrng +"')";
+                stt.executeUpdate(QT_nota,Statement.RETURN_GENERATED_KEYS);
+                ResultSet newNotaKey = stt.getGeneratedKeys();
+
+                newNotaKey.next();
+                int noNota=Integer.valueOf(newNotaKey.getString(1));
+                String QT_nota_item = "INSERT INTO `t_nota_item`(`noNota`,`idBarang`,`qty`,`totalHarga`) VALUES ";
+
+                int i = 0;
+                ResultSet res2 = stt.executeQuery(SQL);
+                while( res2.next()){
+                    QT_nota_item += "( '"+noNota+"', '"
+                    + Integer.parseInt(res2.getString(2)) + "', "
+                    + " '" + Integer.parseInt(res2.getString(3)) + "', '"+Integer.parseInt(res2.getString(7))+"' )";
+                    if((i+1) == rowCart){
+                        QT_nota_item += "; ";
+                    }else{
+                        QT_nota_item += ", ";
+                    }
+                    i++;
+                }
+                stt.executeUpdate(QT_nota_item);
+                String Qhpskeranjang = "DELETE FROM t_keranjang ";
+                stt.executeUpdate(Qhpskeranjang);
+                settablekeranjangload();
+                settablenotaload();
+                stt.close();
+                kon.close();
+
+                txt_bayar.setText("");
+                txt_kembalian.setText("");
+            }
+            catch(Exception ex){
+                JOptionPane.showMessageDialog(null,
+                    ex.getMessage(),"ERROR",
+                    JOptionPane.INFORMATION_MESSAGE);
+            }
+        }
+    }//GEN-LAST:event_btnKonfirPembayaranActionPerformed
+
+    private void txt_bayarKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_bayarKeyReleased
+        // TODO add your handling code here:
+        bayar = Integer.parseInt(txt_bayar.getText());
+        kembalian = bayar - tagihan ;
+        txt_kembalian.setText(String.valueOf(kembalian));
+    }//GEN-LAST:event_txt_bayarKeyReleased
+
+    private void txt_bayarKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_bayarKeyPressed
+        // TODO add your handling code here:
+        //        if(txt_bayar.getText().equals(" ")){
+            //            System.out.println("aaaa");
+            //        }
+        //        bayar = Integer.parseInt(txt_bayar.getText());
+        //        kembalian = bayar - tagihan ;
+        //        txt_kembalian.setText(String.valueOf(kembalian));
+    }//GEN-LAST:event_txt_bayarKeyPressed
+
+    private void btn_hapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_hapusActionPerformed
+        // TODO add your handling code here:
+        try{
+            Class.forName(driver);
+            Connection kon = DriverManager.getConnection(database,user,pass);
+            Statement stt = kon.createStatement();
+            String  SQL = "DELETE FROM t_keranjang "
+            + " where "
+            + " idBarang = '"+idBarang+"'";
+            stt.executeUpdate(SQL);
+            tblModelKeranjang.removeRow(row);
+            JOptionPane.showMessageDialog(null,"Berhasil Dihapus Dari Keranjang","Sukses",
+                JOptionPane.INFORMATION_MESSAGE);
+            stt.close();
+            kon.close();
+            settablekeranjangload();
+            membersihkan_input_kekeranjang();
+            btn_ubah.setEnabled(false);
+            btn_hapus.setEnabled(false);
+        }catch(Exception ex){
+            System.err.println(ex.getMessage());
+        }
+    }//GEN-LAST:event_btn_hapusActionPerformed
+
+    private void btn_ubahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_ubahActionPerformed
+        // TODO add your handling code here:
+        if(txt_qty.getText().isEmpty() || jLabel2.getText().equals("Nama Barang")){
+            JOptionPane.showMessageDialog(null, "Data Tidak Boleh Kosong","Error",
+                JOptionPane.INFORMATION_MESSAGE);
+        }else{
+            try{
+                int qty = Integer.valueOf(txt_qty.getText());
+                Class.forName(driver);
+                Connection kon = DriverManager.getConnection(
+                    database,
+                    user,
+                    pass);
+                Statement stt = kon.createStatement();
+                String cekKeranjang = "SELECT * FROM `t_keranjang` where idBarang ='"+idBarang+"'";
+                ResultSet res = stt.executeQuery(cekKeranjang);
+
+                if(res.next()){
+                    String SQL = "UPDATE `t_keranjang` SET `qty` = "+(qty)
+                    + " WHERE idBarang = '"+idBarang+"'";
+                    JOptionPane.showMessageDialog(null,"Berhasil Diubah","Sukses",
+                        JOptionPane.INFORMATION_MESSAGE);
+                    stt.executeUpdate(SQL);
+                    membersihkan_input_kekeranjang();
+                    settablekeranjangload();
+                    stt.close();
+                    kon.close();
+                    btn_ubah.setEnabled(false);
+                    btn_hapus.setEnabled(false);
+                }
+            }
+            catch(Exception ex){
+                JOptionPane.showMessageDialog(null,
+                    ex.getMessage(),"ERROR",
+                    JOptionPane.INFORMATION_MESSAGE);
+            }
+        }
+    }//GEN-LAST:event_btn_ubahActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
         if(txt_qty.getText().isEmpty() || jLabel2.getText().equals("Nama Barang")){
             JOptionPane.showMessageDialog(null, "Data Tidak Boleh Kosong","Error",
-                    JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.INFORMATION_MESSAGE);
         }else{
             try{
-                    int qty = Integer.valueOf(txt_qty.getText());
-                    Class.forName(driver);
-                    Connection kon = DriverManager.getConnection(
-                        database,
-                        user,
-                        pass);
-                    Statement stt = kon.createStatement();
-                    String cekKeranjang = "SELECT * FROM `t_keranjang` where idBarang ='"+idBarang+"'";
-                    ResultSet res = stt.executeQuery(cekKeranjang);
-                    
-                    if(res.next()){
-                        int oldQty = Integer.valueOf(res.getString(3));
-                        String SQL = "UPDATE `t_keranjang` SET `qty` = "+(qty +oldQty) 
-                        + " WHERE idBarang = '"+idBarang+"'";
+                int qty = Integer.valueOf(txt_qty.getText());
+                Class.forName(driver);
+                Connection kon = DriverManager.getConnection(
+                    database,
+                    user,
+                    pass);
+                Statement stt = kon.createStatement();
+                String cekKeranjang = "SELECT * FROM `t_keranjang` where idBarang ='"+idBarang+"'";
+                ResultSet res = stt.executeQuery(cekKeranjang);
 
-                        stt.executeUpdate(SQL);
-                    }else{
-                        String SQL = "INSERT INTO `t_keranjang`(`idBarang`,`qty`) "
-                        + "VALUES "
-                        + "( '"+idBarang+"', "
-                        + " '"+ qty +"')";
+                if(res.next()){
+                    int oldQty = Integer.valueOf(res.getString(3));
+                    String SQL = "UPDATE `t_keranjang` SET `qty` = "+(qty +oldQty)
+                    + " WHERE idBarang = '"+idBarang+"'";
 
-                        stt.executeUpdate(SQL);
-                    }
-//                    stt.executeUpdate(SQL);
-//                    dataKeranjang[0] = idBarang;
-//                    dataKeranjang[1] = qty;
-//
-//                    tblModelKeranjang.insertRow(0, dataKeranjang);
-                    settablekeranjangload();
-                    stt.close();
-                    kon.close();
-                    membersihkan_input_kekeranjang();
-//                    btn_simpan.setEnabled(false);
-//                    nonaktif_teks();
+                    stt.executeUpdate(SQL);
+                }else{
+                    String SQL = "INSERT INTO `t_keranjang`(`idBarang`,`qty`) "
+                    + "VALUES "
+                    + "( '"+idBarang+"', "
+                    + " '"+ qty +"')";
+
+                    stt.executeUpdate(SQL);
+                }
+                settablekeranjangload();
+                stt.close();
+                kon.close();
+                membersihkan_input_kekeranjang();
             }
             catch(Exception ex){
                 JOptionPane.showMessageDialog(null,
@@ -546,166 +775,45 @@ public class frm_bon extends javax.swing.JFrame {
             idBarang = tblModelKeranjang.getValueAt(row, 0).toString();
             jLabel2.setText(tblModelKeranjang.getValueAt(row, 1).toString());
             txt_qty.setText(tblModelKeranjang.getValueAt(row, 2).toString());
-            
+
             btn_ubah.setEnabled(true);
             btn_hapus.setEnabled(true);
         }
     }//GEN-LAST:event_tbl_keranjangMouseClicked
 
-    private void btn_ubahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_ubahActionPerformed
+    private void tbl_barangMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbl_barangMouseClicked
         // TODO add your handling code here:
-        if(txt_qty.getText().isEmpty() || jLabel2.getText().equals("Nama Barang")){
-            JOptionPane.showMessageDialog(null, "Data Tidak Boleh Kosong","Error",
-                    JOptionPane.INFORMATION_MESSAGE);
-        }else{
-            try{
-                    int qty = Integer.valueOf(txt_qty.getText());
-                    Class.forName(driver);
+        if(evt.getClickCount() == 2){
+            row = tbl_barang.getSelectedRow();
+            idBarang = tblModelBarang.getValueAt(row, 0).toString();
+            jLabel2.setText(tblModelBarang.getValueAt(row, 1).toString());
+        }
+    }//GEN-LAST:event_tbl_barangMouseClicked
+
+    public void insertItemNota(int noNota,int idBarang,int qty, int totalHarga){
+       try{
+           Class.forName(driver);
                     Connection kon = DriverManager.getConnection(
                         database,
                         user,
                         pass);
-                    Statement stt = kon.createStatement();
-                    String cekKeranjang = "SELECT * FROM `t_keranjang` where idBarang ='"+idBarang+"'";
-                    ResultSet res = stt.executeQuery(cekKeranjang);
-                    
-                    if(res.next()){
-                        String SQL = "UPDATE `t_keranjang` SET `qty` = "+(qty) 
-                        + " WHERE idBarang = '"+idBarang+"'";
-                        JOptionPane.showMessageDialog(null,"Berhasil Diubah","Sukses",
-                            JOptionPane.INFORMATION_MESSAGE);
-                        stt.executeUpdate(SQL);
-                        membersihkan_input_kekeranjang();
-                        settablekeranjangload();
-                        stt.close();
-                        kon.close();
-                        btn_ubah.setEnabled(false);
-                        btn_hapus.setEnabled(false);
-                    }
-            }
-            catch(Exception ex){
+                    Statement stt = kon.createStatement(); 
+        String QT_nota_item = "INSERT INTO `t_nota_item`(`noNota`,`idBarang`,`qty`,`totalHarga`) "
+                                    + "VALUES "
+                                    + "( '"+noNota+"', "
+                                    + " '" + idBarang + "', "
+                                    + " '" + qty + "', "
+                                    + " '" + totalHarga + "')";
+
+        stt.executeUpdate(QT_nota_item);
+       }catch(Exception ex){
                 JOptionPane.showMessageDialog(null,
                     ex.getMessage(),"ERROR",
                     JOptionPane.INFORMATION_MESSAGE);
             }
-        }
-    }//GEN-LAST:event_btn_ubahActionPerformed
-
-    private void btnKonfirPembayaranActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnKonfirPembayaranActionPerformed
-        // TODO add your handling code here:
-        if(txt_bayar.getText().isEmpty() || txt_kembalian.getText().isEmpty() || txt_tagihan.getText().equals(0)){
-            JOptionPane.showMessageDialog(null, "Data Tidak Boleh Kosong","Error",
-                    JOptionPane.INFORMATION_MESSAGE);
-        }else{
-            try{
-                    Class.forName(driver);
-                    Connection kon = DriverManager.getConnection(
-                        database,
-                        user,
-                        pass);
-                    Statement stt = kon.createStatement();
-                    String SQL = "SELECT *,t_keranjang.qty * t_barang.harga as \"Total Harga\" FROM `t_keranjang` JOIN t_barang ON t_keranjang.idBarang=t_barang.id";
-                    ResultSet res = stt.executeQuery(SQL);
-                    tblModelKeranjang.getRowCount();
-                    
-                    if(res.next()){
-                        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
-                        LocalDateTime waktuSkrng = LocalDateTime.now();
-                        String QT_nota = "INSERT INTO `t_nota`(`total`,`bayar`,`kembalian`,`tglTransaksi`) "
-                            + "VALUES "
-                            + "( '"+tagihan+"', "
-                            + " '" + bayar + "', "
-                            + " '" + kembalian + "', "
-                            + " '"+ waktuSkrng +"')";
-
-                        int newNota = stt.executeUpdate(QT_nota,Statement.RETURN_GENERATED_KEYS);
-                        do
-                        {
-                            String QT_nota_item = "INSERT INTO `t_nota_item`(`noNota`,`idBarang`,`qty`,`totalHarga`) "
-                            + "VALUES "
-                            + "( '"+newNota+"', "
-                            + " '" + Integer.parseInt(res.getString(2)) + "', "
-                            + " '" + Integer.parseInt(res.getString(3)) + "', "
-                            + " '" + Integer.parseInt(res.getString(7)) + "')";
-
-                            stt.executeUpdate(QT_nota_item);
-//                            dataKeranjang[0] = res.getString(2);
-//                            dataKeranjang[1] = res.getString(5);
-//                            dataKeranjang[2] = res.getString(3);
-//                            dataKeranjang[3] = res.getString(7);
-//                            tblModelKeranjang.addRow(dataKeranjang);
-//
-//                            tagihan += Integer.valueOf(res.getString(7));
-                        }
-                        while (res.next());
-                        String Qhpskeranjang = "DELETE FROM t_keranjang ";
-                        stt.executeUpdate(Qhpskeranjang);
-                    }
-                    settablekeranjangload();
-                    stt.close();
-                    kon.close();
-            }
-            catch(Exception ex){
-                JOptionPane.showMessageDialog(null,
-                    ex.getMessage(),"ERROR",
-                    JOptionPane.INFORMATION_MESSAGE);
-            }
-        }
-    }//GEN-LAST:event_btnKonfirPembayaranActionPerformed
-
-    private void btn_hapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_hapusActionPerformed
-        // TODO add your handling code here:
-         try{
-            Class.forName(driver);
-            Connection kon = DriverManager.getConnection(database,user,pass);
-            Statement stt = kon.createStatement();
-            String  SQL = "DELETE FROM t_keranjang "
-            + " where "
-            + " idBarang = '"+idBarang+"'";
-            stt.executeUpdate(SQL);
-            tblModelKeranjang.removeRow(row);
-            JOptionPane.showMessageDialog(null,"Berhasil Dihapus Dari Keranjang","Sukses",
-                            JOptionPane.INFORMATION_MESSAGE);
-            stt.close();
-            kon.close();
-            settablekeranjangload();
-            membersihkan_input_kekeranjang();
-            btn_ubah.setEnabled(false);
-            btn_hapus.setEnabled(false);
-        }catch(Exception ex){
-            System.err.println(ex.getMessage());
-        }
-    }//GEN-LAST:event_btn_hapusActionPerformed
-
-    private void btn_hapusallActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_hapusallActionPerformed
-        // TODO add your handling code here:
-         try{
-            Class.forName(driver);
-            Connection kon = DriverManager.getConnection(database,user,pass);
-            Statement stt = kon.createStatement();
-            String  SQL = "DELETE FROM t_keranjang ";
-            stt.executeUpdate(SQL);
-            tblModelKeranjang.removeRow(row);
-            JOptionPane.showMessageDialog(null,"Berhasil Hapus Semua Barang Dari Keranjang","Pesan",
-                            JOptionPane.INFORMATION_MESSAGE);
-            stt.close();
-            kon.close();
-            settablekeranjangload();
-            membersihkan_input_kekeranjang();
-            btn_ubah.setEnabled(false);
-            btn_hapus.setEnabled(false);
-        }catch(Exception ex){
-            System.err.println(ex.getMessage());
-        }
-    }//GEN-LAST:event_btn_hapusallActionPerformed
-
-    private void txt_bayarKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_bayarKeyPressed
-        // TODO add your handling code here:
-        bayar = Integer.parseInt(txt_bayar.getText());
-        kembalian = bayar - tagihan ;
-        txt_kembalian.setText(String.valueOf(kembalian));
-    }//GEN-LAST:event_txt_bayarKeyPressed
-
+        
+    }
+    
     /**
      * @param args the command line arguments
      */
@@ -759,6 +867,7 @@ public class frm_bon extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
     private javax.swing.JRadioButton jRadioButton1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;

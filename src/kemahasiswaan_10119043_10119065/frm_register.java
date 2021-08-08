@@ -35,15 +35,25 @@ public class frm_register extends javax.swing.JFrame {
        try{
             Class.forName(driver);
             Connection kon = DriverManager.getConnection(database,user,pass);
-            Statement stt = kon.createStatement();
-            String SQL = "INSERT INTO `pengguna`(`username`,`password`,`nama`) "
-                    + "VALUES "
-                    + "('"+txt_userid.getText()+"', "
-                    + " '"+txt_password.getText()+"', "
-                    + " '"+ txt_nama.getText() +"')";
-            stt.executeUpdate(SQL);
-            stt.close();
-            kon.close();
+            Statement stt = kon.createStatement(); 
+            String cekUser = "select * from pengguna where `username` = '"+txt_userid.getText()+"'";
+            ResultSet res = stt.executeQuery(cekUser);
+            
+            if(!res.next()){
+                String SQL = "INSERT INTO `pengguna`(`username`,`password`,`nama`) "
+                        + "VALUES "
+                        + "('"+txt_userid.getText()+"', "
+                        + " '"+txt_password.getText()+"', "
+                        + " '"+ txt_nama.getText() +"')";
+                stt.executeUpdate(SQL);
+                stt.close();
+                kon.close();
+                JOptionPane.showMessageDialog(null, "Registrasi Akun Berhasil Dilakukan","Success",
+                        JOptionPane.INFORMATION_MESSAGE);
+            }else{
+                JOptionPane.showMessageDialog(null, "Username Sudah Digunakan!","Failed",
+                        JOptionPane.INFORMATION_MESSAGE);
+            }
         }catch(Exception ex){
             System.err.println(ex.getMessage());
             JOptionPane.showMessageDialog(null, ex.getMessage(),"Error",
