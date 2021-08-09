@@ -62,26 +62,6 @@ public class frm_nilai2 extends javax.swing.JFrame {
         }
     }
     
-//    private void NimByNama() {
-//        Object nama = comboNama.getSelectedItem();
-//            try {
-//            Class.forName(driver);
-//            Connection kon = DriverManager.getConnection(database,user,pass);
-//            Statement stt = kon.createStatement();
-//            String SQL = "select nim `from` `t_mahasiswa` where `nama` = '"+nama+"';" ;
-//            ResultSet res = stt.executeQuery(SQL);
-//            txt_nim.setText(res.toString());
-//            res.close();
-//            stt.close();
-//            kon.close();
-//        } catch (Exception ex) {
-//            System.err.println(ex.getMessage());
-//            JOptionPane.showMessageDialog(null, ex.getMessage(),"Error",
-//                    JOptionPane.INFORMATION_MESSAGE);
-//            System.exit(0);
-//        }
-//    }
-    
     private void setModelComboMK(){
        try{
             Class.forName(driver);
