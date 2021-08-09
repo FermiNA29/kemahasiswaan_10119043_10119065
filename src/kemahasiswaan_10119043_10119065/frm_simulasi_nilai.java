@@ -142,6 +142,7 @@ public class frm_simulasi_nilai extends javax.swing.JFrame {
                 data[14] = res.getString(15);
                 data[15] = res.getString(16);
                 data[16] = res.getString(17);
+                data[17] = res.getString(18);
                 tablemodel.addRow(data);
             }
             res.close();
@@ -331,7 +332,7 @@ public class frm_simulasi_nilai extends javax.swing.JFrame {
             na = nilai_absen + nilai_tgs + n_uts + n_uas;
             indek = getIndex(na);
             keterangan = getKeterangan(indek);
-            getKdmkByNama((String) nama_mk);
+//            getKdmkByNama((String) nama_mk);
             
             Class.forName(driver);
                     Connection kon = DriverManager.getConnection(
@@ -339,9 +340,9 @@ public class frm_simulasi_nilai extends javax.swing.JFrame {
                         user,
                         pass);
                     Statement stt = kon.createStatement();
-                    String SQL = "INSERT INTO `t_nilai`(`kd_mk`,`pers_absen`,`pers_tugas`,`pers_uts`,`pers_uas`,`absensi`,`tugas1`,`tugas2`,`tugas3`,`uts`,`uas`,`nilaiAbsen`,`nilaiTugas`,`nilaiUts`,`nilaiUas`,`index`,`ket`) "
+                    String SQL = "INSERT INTO `t_simulasi`(`kd_mk`,`pers_absen`,`pers_tugas`,`pers_uts`,`pers_uas`,`absensi`,`tugas1`,`tugas2`,`tugas3`,`uts`,`uas`,`nilaiAbsen`,`nilaiTugas`,`nilaiUts`,`nilaiUas`,`index`,`ket`) "
                     + "VALUES "
-                    + "( '"+kd_mk+"', "
+                    + "( '"+getKodeMK((String) nama_mk)+"', "
                     + " '"+prest_absen+"', "
                     + " '"+prest_tgs+"', "
                     + " '"+ prest_uts + "', "
