@@ -976,8 +976,8 @@ public class frm_nilai2 extends javax.swing.JFrame {
                            txt_cari.getText()+"%' OR t_mata_kuliah.`nama_mk` LIKE '%"+txt_cari.getText()+"%'";
             ResultSet res = stt.executeQuery(SQL);
             while(res.next()){
-                data[0] = res.getString(18);
-                data[1] = res.getString(24);
+                data[0] = res.getString(19);
+                data[1] = res.getString(25);
                 data[2] = res.getString(7);
                 data[3] = res.getString(8);
                 data[4] = res.getString(9);
