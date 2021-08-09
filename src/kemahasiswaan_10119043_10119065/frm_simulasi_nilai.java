@@ -9,6 +9,9 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import javax.swing.JOptionPane;
 
 /**
@@ -19,7 +22,7 @@ public class frm_simulasi_nilai extends javax.swing.JFrame {
     koneksi dbsetting;
     String driver, database,user,pass;
     Object tabel;
-    
+    Object dataSimNilai[][] = {};
     int totKehadiran,maksKehadiran = 14;
     double prest_absen,prest_tgs,prest_uts,prest_uas,
             nilai_tgs1,nilai_tgs2,nilai_tgs3,nilai_uts,nilai_uas,
@@ -110,26 +113,9 @@ public class frm_simulasi_nilai extends javax.swing.JFrame {
     
     private void settableload(){
         String stat = "";
-//        try{
-//            Class.forName(driver);
-//            Connection kon = DriverManager.getConnection(database,user,pass);
-//            Statement stt = kon.createStatement();
-//            String SQL = "select * from t_mata_kuliah";
-//            ResultSet res = stt.executeQuery(SQL);
-//            while(res.next()){
-//                data[0] = res.getString(1);
-//                data[1] = res.getString(2);
-//                tablemodel.addRow(data);
-//            }
-//            res.close();
-//            stt.close();
-//            kon.close();
-//        }catch(Exception ex){
-//            System.err.println(ex.getMessage());
-//            JOptionPane.showMessageDialog(null, ex.getMessage(),"Error",
-//                    JOptionPane.INFORMATION_MESSAGE);
-//            System.exit(0);
-//        }
+            for(int i = 0; i < dataSimNilai.length; i++){
+                tablemodel.addRow(dataSimNilai);
+            }
     }
     
     public String getKodeMK(String namaMK){
@@ -287,7 +273,6 @@ public class frm_simulasi_nilai extends javax.swing.JFrame {
 
             indek = getIndex(na);
             keterangan = getKeterangan(indek);
-
             data[0] = nama_mk.toString();
             data[1] = String.valueOf(prest_absen) + "%";
             data[2] = String.valueOf(prest_tgs) + "%";
@@ -308,7 +293,13 @@ public class frm_simulasi_nilai extends javax.swing.JFrame {
             data[17] = String.valueOf(keterangan);
            
      }
-     
+     private Object[] appendValue(Object[] obj, Object newObj) {
+
+        ArrayList<Object> temp = new ArrayList<Object>(Arrays.asList(obj));
+        temp.add(newObj);
+        return temp.toArray();
+
+      }
      public boolean validation(){
          if(comboMK.getSelectedIndex() == 0 || txt_perst_absen.getText().isEmpty()
                  || txt_perst_tugas.getText().isEmpty() || txt_perst_uas.getText().isEmpty()
@@ -759,6 +750,7 @@ public class frm_simulasi_nilai extends javax.swing.JFrame {
         membersihkan_teks();
         comboMK.requestFocus();
         btn_simpan.setEnabled(true);
+        btn_batal.setEnabled(true);
         btn_ubah.setEnabled(false);
         btn_hapus.setEnabled(false);
         btn_keluar.setEnabled(false);
@@ -876,12 +868,20 @@ public class frm_simulasi_nilai extends javax.swing.JFrame {
 
     private void txt_cari_mkKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_cari_mkKeyReleased
         // TODO add your handling code here:
-        tablemodel.setRowCount(0);
+//        tablemodel.setRowCount(0);
 
-        try{
-            Class.forName(driver);
-            Connection kon = DriverManager.getConnection(database,user,pass);
-            Statement stt = kon.createStatement();
+//        for(int i = 0; i < tablemodel.getRowCount(); i++){//For each row
+//            for(int j = 0; j < tablemodel.getColumnCount(); j++){//For each column in that row
+//                if(tablemodel.getValueAt(i, j).equals(txt_cari_mk.getText())){//Search the model
+//                    System.out.println(tablemodel.getValueAt(i, j));//Print if found string
+//                }
+//            }//For loop inner
+//        }//For loop out
+         System.out.println("asdasd");
+//        try{
+//            Class.forName(driver);
+//            Connection kon = DriverManager.getConnection(database,user,pass);
+//            Statement stt = kon.createStatement();
             
 //            while(res.next()){
 //                data[0] = res.getString(1);
@@ -889,14 +889,14 @@ public class frm_simulasi_nilai extends javax.swing.JFrame {
 //                tablemodel.addRow(data);
 //            }
 //txt_cari_mk.getText()
-            stt.close();
-            kon.close();
-        }catch(Exception ex){
-            System.err.println(ex.getMessage());
-            JOptionPane.showMessageDialog(null, ex.getMessage(),"ERROR",
-                JOptionPane.INFORMATION_MESSAGE);
-            System.exit(0);
-        }
+//            stt.close();
+//            kon.close();
+//        }catch(Exception ex){
+//            System.err.println(ex.getMessage());
+//            JOptionPane.showMessageDialog(null, ex.getMessage(),"ERROR",
+//                JOptionPane.INFORMATION_MESSAGE);
+//            System.exit(0);
+//        }
     }//GEN-LAST:event_txt_cari_mkKeyReleased
 
     /**
