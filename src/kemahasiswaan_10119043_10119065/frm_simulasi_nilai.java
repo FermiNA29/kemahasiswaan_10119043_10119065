@@ -257,14 +257,19 @@ public class frm_simulasi_nilai extends javax.swing.JFrame {
          return indeks;
      }
      
-      public String getKeterangan(char indek){
-         String keterangan;
-         if(indek == 'A'||indek == 'B'||indek == 'C'){
-             keterangan = "LULUS";
+      public String getKeterangan(char indek, double absensi){
+         String keterangan = null;
+         if(absensi < 11 || indek == 'D' || indek == 'E'){
+//             if (index == 'D' || index == 'E') {
+                 keterangan = "Tidak Lulus";
+//             } else {
+//                 hasil = "Tidak Lulus";
+//             }
+         }else if(absensi >= 11.0 || indek == 'A' || indek == 'B' || indek == 'C'){
+                keterangan = "Lulus";
          }else{
-             keterangan = "Tidak Lulus";
+              JOptionPane.showMessageDialog(null, "Nilai Tidak Valid", "Pesan", JOptionPane.ERROR_MESSAGE);  
          }
-         
          return keterangan;
      }
      
@@ -331,7 +336,7 @@ public class frm_simulasi_nilai extends javax.swing.JFrame {
             n_uas = nilai_uas * prest_uas/100;
             na = nilai_absen + nilai_tgs + n_uts + n_uas;
             indek = getIndex(na);
-            keterangan = getKeterangan(indek);
+            keterangan = getKeterangan(indek, totKehadiran);
 //            getKdmkByNama((String) nama_mk);
             
             Class.forName(driver);
