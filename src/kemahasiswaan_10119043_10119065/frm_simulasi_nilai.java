@@ -122,10 +122,10 @@ public class frm_simulasi_nilai extends javax.swing.JFrame {
             Class.forName(driver);
             Connection kon = DriverManager.getConnection(database,user,pass);
             Statement stt = kon.createStatement();
-            String SQL = "select * from t_simulasi join t_mata_kuliah on t_mata_kuliah.kd_mk=t_simulasi.kd_mk where t_mata_kuliah.kd_mk";
+            String SQL = "select * from t_simulasi join t_mata_kuliah on t_mata_kuliah.kd_mk=t_simulasi.kd_mk";
             ResultSet res = stt.executeQuery(SQL);
             while(res.next()){
-                data[0] = res.getString(19);
+                data[0] = res.getString(20);
                 data[1] = res.getString(2);
                 data[2] = res.getString(3);
                 data[3] = res.getString(4);
