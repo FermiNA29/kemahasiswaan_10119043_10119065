@@ -290,13 +290,13 @@ public class frm_bon extends javax.swing.JFrame {
         comboBarang.setSelectedIndex(0);
         txt_jumlah.setText("1");
         txt_totHarga.setText("");
-        jLabel4.setText("0");
+        jLabel14.setText("0");
         jTextField2.setText("");
         jTextField3.setText("");
     }
     
-    public String getIdBarangFromDB(String nama_barang) {
-        String id = "";
+    public int getIdBarangFromDB(String nama_barang) {
+        int id = 0;
          try{
             Class.forName(driver);
             
@@ -305,7 +305,7 @@ public class frm_bon extends javax.swing.JFrame {
             String SQL = "select id from t_barang where `nama_barang`='"+nama_barang+"';";
             ResultSet res = stt.executeQuery(SQL);
             while(res.next()){
-                id = res.getString(1).toString();
+                id = Integer.valueOf(res.getString(1).toString());
             }
             res.close();
             stt.close();
@@ -319,6 +319,37 @@ public class frm_bon extends javax.swing.JFrame {
         return id;
     }
     
+    public Boolean getNamaBarangFromDB() {
+        String nama = "";
+        System.out.println(comboBarang.getSelectedItem());
+        System.out.println(itemBarang);
+        System.out.println(getIdBarangFromDB(String.valueOf(comboBarang.getSelectedItem())));
+        if (comboBarang.getSelectedIndex() > 0 && getIdBarangFromDB(String.valueOf(comboBarang.getSelectedItem())) == itemBarang) {
+            return false;
+        }
+         try{
+            Class.forName(driver);
+            
+            Connection kon = DriverManager.getConnection(database,user,pass);
+            Statement stt = kon.createStatement();
+            String SQL = "select t_barang.nama_barang from t_nota_item join t_barang on t_nota_item.idBarang=t_barang.id where t_nota_item.`idBarang`='"+getIdBarangFromDB(String.valueOf(comboBarang.getSelectedItem()))+"' AND t_nota_item.`noNota`='"+ noNota +"';";
+            ResultSet res = stt.executeQuery(SQL);
+            if(res.next()){
+                return true;
+            } else {
+                return false;
+            }
+//            res.close();
+//            stt.close();
+//            kon.close();
+        }catch(Exception ex){
+            System.err.println(ex.getMessage());
+            JOptionPane.showMessageDialog(null, ex.getMessage(),"Error",
+                    JOptionPane.INFORMATION_MESSAGE);
+            System.exit(0);
+            return false;
+        }
+    }
 //    private void HargaByNamaBarang(String nama,int hargaSatuan) {
 //        
 //        int harga = 0;
@@ -1060,13 +1091,9 @@ public class frm_bon extends javax.swing.JFrame {
         // TODO add your handling code here:
         Object barang = comboBarang.getSelectedItem();
         txt_jumlah.setText("1");
-//        int hargaSatuan = 0;
-//        HargaByNamaBarang((String) barang);
         
+        System.out.println(comboBarang.getSelectedIndex());
         try {
-            if (comboBarang.getSelectedIndex() == 0) {
-//                txt_nim.setText("");
-            } else {
                 Class.forName(driver);
                 Connection kon = DriverManager.getConnection(database,user,pass);
                 Statement stt = kon.createStatement();
@@ -1082,7 +1109,7 @@ public class frm_bon extends javax.swing.JFrame {
 //                res.next();
                 
                 while (res.next()) {
-                    System.out.println(res.getString(1));
+//                    System.out.println(res.getString(1));
                     hargaSatuan = Integer.valueOf(res.getString(1));
                     
                 }
@@ -1093,7 +1120,7 @@ public class frm_bon extends javax.swing.JFrame {
                 asd.close();
                 stt.close();
                 kon.close();
-            }
+            
             
         } catch (Exception ex) {
             System.err.println(ex.getMessage());
@@ -1140,7 +1167,11 @@ public class frm_bon extends javax.swing.JFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
-        try {
+        if (comboBarang.getSelectedIndex() > 0 && getNamaBarangFromDB()) {
+            JOptionPane.showMessageDialog(null, "Data Tidak Boleh Kosong","Error",
+               JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            try {
             Class.forName(driver);
                     Connection kon = DriverManager.getConnection(database,user,pass);
                     Statement stt = kon.createStatement();
@@ -1181,6 +1212,8 @@ public class frm_bon extends javax.swing.JFrame {
                     JOptionPane.INFORMATION_MESSAGE);
             System.exit(0);
         }
+        }
+        
     }//GEN-LAST:event_jButton2ActionPerformed
 
     public void insertItemNota(int noNota,int idBarang,int qty, int totalHarga){
