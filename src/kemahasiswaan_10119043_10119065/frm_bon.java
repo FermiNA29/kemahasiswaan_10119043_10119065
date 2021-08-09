@@ -442,7 +442,12 @@ public class frm_bon extends javax.swing.JFrame {
 
         jRadioButton1.setText("jRadioButton1");
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosed(java.awt.event.WindowEvent evt) {
+                formWindowClosed(evt);
+            }
+        });
 
         tbl_barang.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -1287,6 +1292,12 @@ public class frm_bon extends javax.swing.JFrame {
             System.exit(0);
         }
     }//GEN-LAST:event_txt_cari_notaKeyReleased
+
+    private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
+        // TODO add your handling code here:
+        frm_utama frm = new frm_utama();
+        frm.setVisible(true);
+    }//GEN-LAST:event_formWindowClosed
 
     public void insertItemNota(int noNota,int idBarang,int qty, int totalHarga){
        try{

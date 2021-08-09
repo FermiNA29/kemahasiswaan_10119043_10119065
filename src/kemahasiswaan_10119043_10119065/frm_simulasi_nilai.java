@@ -373,7 +373,12 @@ public class frm_simulasi_nilai extends javax.swing.JFrame {
         jLabel19 = new javax.swing.JLabel();
         txt_cari_mk = new javax.swing.JTextField();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosed(java.awt.event.WindowEvent evt) {
+                formWindowClosed(evt);
+            }
+        });
 
         jPanel2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
@@ -898,6 +903,12 @@ public class frm_simulasi_nilai extends javax.swing.JFrame {
 //            System.exit(0);
 //        }
     }//GEN-LAST:event_txt_cari_mkKeyReleased
+
+    private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
+        // TODO add your handling code here:
+        frm_utama frm = new frm_utama();
+        frm.setVisible(true);
+    }//GEN-LAST:event_formWindowClosed
 
     /**
      * @param args the command line arguments
