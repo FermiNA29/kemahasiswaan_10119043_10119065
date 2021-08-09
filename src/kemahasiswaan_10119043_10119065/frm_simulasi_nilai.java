@@ -8,6 +8,7 @@ package kemahasiswaan_10119043_10119065;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,7 +27,7 @@ public class frm_simulasi_nilai extends javax.swing.JFrame {
     int totKehadiran,maksKehadiran = 14;
     double prest_absen,prest_tgs,prest_uts,prest_uas,
             nilai_tgs1,nilai_tgs2,nilai_tgs3,nilai_uts,nilai_uas,
-            nilai_absen,nilai_tgs,n_uts,n_uas,na;
+            nilai_absen,nilai_tgs,n_uts,n_uas,na, kd_mk;
     char indek;
     String keterangan;
     Object nama_mk;
@@ -113,9 +114,45 @@ public class frm_simulasi_nilai extends javax.swing.JFrame {
     
     private void settableload(){
         String stat = "";
-            for(int i = 0; i < dataSimNilai.length; i++){
-                tablemodel.addRow(dataSimNilai);
+//            for(int i = 0; i < dataSimNilai.length; i++){
+//                tablemodel.addRow(dataSimNilai);
+//            }
+//        String stat = "";
+        try{
+            Class.forName(driver);
+            Connection kon = DriverManager.getConnection(database,user,pass);
+            Statement stt = kon.createStatement();
+            String SQL = "select * from t_simulasi join t_mata_kuliah on t_mata_kuliah.kd_mk=t_simulasi.kd_mk where t_mata_kuliah.kd_mk";
+            ResultSet res = stt.executeQuery(SQL);
+            while(res.next()){
+                data[0] = res.getString(19);
+                data[1] = res.getString(2);
+                data[2] = res.getString(3);
+                data[3] = res.getString(4);
+                data[4] = res.getString(5);
+                data[5] = res.getString(6);
+                data[6] = res.getString(7);
+                data[7] = res.getString(8);
+                data[8] = res.getString(9);
+                data[9] = res.getString(10);
+                data[10] = res.getString(11);
+                data[11] = res.getString(12);
+                data[12] = res.getString(13);
+                data[13] = res.getString(14);
+                data[14] = res.getString(15);
+                data[15] = res.getString(16);
+                data[16] = res.getString(17);
+                tablemodel.addRow(data);
             }
+            res.close();
+            stt.close();
+            kon.close();
+        }catch(Exception ex){
+            System.err.println(ex.getMessage());
+            JOptionPane.showMessageDialog(null, ex.getMessage(),"Error",
+                    JOptionPane.INFORMATION_MESSAGE);
+            System.exit(0);
+        }
     }
     
     public String getKodeMK(String namaMK){
@@ -262,7 +299,29 @@ public class frm_simulasi_nilai extends javax.swing.JFrame {
             nilai_uas = Double.valueOf(txt_uas.getText());
      }
      
-     public void addToTableAction(){
+     public void getKdmkByNama(String nama_mk) {
+        try{
+            Class.forName(driver);
+            Connection kon = DriverManager.getConnection(database,user,pass);
+            Statement stt = kon.createStatement();
+            String SQL = "select t_mata_kuliah.nama_mk from t_simulasi join t_mata_kuliah on t_mata_kuliah.kd_mk=t_simulasi.kd_mk where t_mata_kuliah.`kd_mk`='"+ nama_mk +"';";
+            ResultSet res = stt.executeQuery(SQL);
+            while(res.next()){
+//                angkatan = res.getString(0);
+                kd_mk = Double.valueOf(res.getString(1));
+            }
+            res.close();
+            stt.close();
+            kon.close();
+        }catch(Exception ex){
+            System.err.println(ex.getMessage());
+            JOptionPane.showMessageDialog(null, ex.getMessage(),"Error",
+                    JOptionPane.INFORMATION_MESSAGE);
+            System.exit(0);
+        }
+    }
+     
+     public void addToTableAction() throws ClassNotFoundException, SQLException{
             inisialisasiVariabel();
                 
             nilai_absen = hitungNilaiAbsen(totKehadiran,maksKehadiran,prest_absen);
@@ -270,9 +329,41 @@ public class frm_simulasi_nilai extends javax.swing.JFrame {
             n_uts = nilai_uts * prest_uts/100;
             n_uas = nilai_uas * prest_uas/100;
             na = nilai_absen + nilai_tgs + n_uts + n_uas;
-
             indek = getIndex(na);
             keterangan = getKeterangan(indek);
+            getKdmkByNama((String) nama_mk);
+            
+            Class.forName(driver);
+                    Connection kon = DriverManager.getConnection(
+                        database,
+                        user,
+                        pass);
+                    Statement stt = kon.createStatement();
+                    String SQL = "INSERT INTO `t_nilai`(`kd_mk`,`pers_absen`,`pers_tugas`,`pers_uts`,`pers_uas`,`absensi`,`tugas1`,`tugas2`,`tugas3`,`uts`,`uas`,`nilaiAbsen`,`nilaiTugas`,`nilaiUts`,`nilaiUas`,`index`,`ket`) "
+                    + "VALUES "
+                    + "( '"+kd_mk+"', "
+                    + " '"+prest_absen+"', "
+                    + " '"+prest_tgs+"', "
+                    + " '"+ prest_uts + "', "
+                    + " '"+ prest_uas + "', "
+                    + " '"+ totKehadiran + "', "
+                    + " '"+ Double.parseDouble(txt_tugas1.getText()) + "', "
+                    + " '"+ Double.parseDouble(txt_tugas2.getText()) + "', "
+                    + " '"+ Double.parseDouble(txt_tugas3.getText()) + "', "
+                    + " '"+ Double.parseDouble(txt_uts.getText()) + "', "
+                    + " '"+ Double.parseDouble(txt_uas.getText()) + "', "
+                    + " '"+ nilai_absen + "', "
+                    + " '"+ nilai_tgs + "', "
+                    + " '"+ n_uts + "', "
+                    + " '"+ n_uas +"',"
+                    + " '"+ indek +"',"
+                    + " '"+ keterangan +"')";
+
+                    stt.executeUpdate(SQL);
+                    
+
+            
+            
             data[0] = nama_mk.toString();
             data[1] = String.valueOf(prest_absen) + "%";
             data[2] = String.valueOf(prest_tgs) + "%";
@@ -291,6 +382,8 @@ public class frm_simulasi_nilai extends javax.swing.JFrame {
             data[15] = String.valueOf(na);
             data[16] = String.valueOf(indek);
             data[17] = String.valueOf(keterangan);
+            stt.close();
+            kon.close();
            
      }
      private Object[] appendValue(Object[] obj, Object newObj) {
