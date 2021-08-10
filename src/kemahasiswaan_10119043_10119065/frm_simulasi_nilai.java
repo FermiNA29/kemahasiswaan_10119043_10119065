@@ -114,10 +114,6 @@ public class frm_simulasi_nilai extends javax.swing.JFrame {
     
     private void settableload(){
         String stat = "";
-//            for(int i = 0; i < dataSimNilai.length; i++){
-//                tablemodel.addRow(dataSimNilai);
-//            }
-//        String stat = "";
         try{
             Class.forName(driver);
             Connection kon = DriverManager.getConnection(database,user,pass);
@@ -126,18 +122,18 @@ public class frm_simulasi_nilai extends javax.swing.JFrame {
             ResultSet res = stt.executeQuery(SQL);
             while(res.next()){
                 data[0] = res.getString(20);
-                data[1] = res.getString(2);
-                data[2] = res.getString(3);
-                data[3] = res.getString(4);
-                data[4] = res.getString(5);
-                data[5] = res.getString(6);
-                data[6] = res.getString(7);
-                data[7] = res.getString(8);
-                data[8] = res.getString(9);
-                data[9] = res.getString(10);
+                data[1] = res.getString(3);
+                data[2] = res.getString(4);
+                data[3] = res.getString(5);
+                data[4] = res.getString(6);
+                data[5] = res.getString(7);
+                data[6] = res.getString(8);
+                data[7] = res.getString(9);
+                data[8] = res.getString(10);
+                data[9] = res.getString(11);
                 data[10] = res.getString(11);
-                data[11] = res.getString(12);
-                data[12] = res.getString(13);
+                data[11] = res.getString(13);
+                data[12] = res.getString(12);
                 data[13] = res.getString(14);
                 data[14] = res.getString(15);
                 data[15] = res.getString(16);
@@ -260,11 +256,7 @@ public class frm_simulasi_nilai extends javax.swing.JFrame {
       public String getKeterangan(char indek, double absensi){
          String keterangan = null;
          if(absensi < 11 || indek == 'D' || indek == 'E'){
-//             if (index == 'D' || index == 'E') {
                  keterangan = "Tidak Lulus";
-//             } else {
-//                 hasil = "Tidak Lulus";
-//             }
          }else if(absensi >= 11.0 || indek == 'A' || indek == 'B' || indek == 'C'){
                 keterangan = "Lulus";
          }else{
@@ -327,7 +319,7 @@ public class frm_simulasi_nilai extends javax.swing.JFrame {
         }
     }
      
-     public void addToTableAction() throws ClassNotFoundException, SQLException{
+     public void addToTableAction(String type) throws ClassNotFoundException, SQLException{
             inisialisasiVariabel();
                 
             nilai_absen = hitungNilaiAbsen(totKehadiran,maksKehadiran,prest_absen);
@@ -337,38 +329,54 @@ public class frm_simulasi_nilai extends javax.swing.JFrame {
             na = nilai_absen + nilai_tgs + n_uts + n_uas;
             indek = getIndex(na);
             keterangan = getKeterangan(indek, totKehadiran);
-//            getKdmkByNama((String) nama_mk);
             
             Class.forName(driver);
-                    Connection kon = DriverManager.getConnection(
-                        database,
-                        user,
-                        pass);
-                    Statement stt = kon.createStatement();
-                    String SQL = "INSERT INTO `t_simulasi`(`kd_mk`,`pers_absen`,`pers_tugas`,`pers_uts`,`pers_uas`,`absensi`,`tugas1`,`tugas2`,`tugas3`,`uts`,`uas`,`nilaiAbsen`,`nilaiTugas`,`nilaiUts`,`nilaiUas`,`index`,`ket`) "
-                    + "VALUES "
-                    + "( '"+getKodeMK((String) nama_mk)+"', "
-                    + " '"+prest_absen+"', "
-                    + " '"+prest_tgs+"', "
-                    + " '"+ prest_uts + "', "
-                    + " '"+ prest_uas + "', "
-                    + " '"+ totKehadiran + "', "
-                    + " '"+ Double.parseDouble(txt_tugas1.getText()) + "', "
-                    + " '"+ Double.parseDouble(txt_tugas2.getText()) + "', "
-                    + " '"+ Double.parseDouble(txt_tugas3.getText()) + "', "
-                    + " '"+ Double.parseDouble(txt_uts.getText()) + "', "
-                    + " '"+ Double.parseDouble(txt_uas.getText()) + "', "
-                    + " '"+ nilai_absen + "', "
-                    + " '"+ nilai_tgs + "', "
-                    + " '"+ n_uts + "', "
-                    + " '"+ n_uas +"',"
-                    + " '"+ indek +"',"
-                    + " '"+ keterangan +"')";
-
-                    stt.executeUpdate(SQL);
-                    
-
+            Connection kon = DriverManager.getConnection(database,user,pass);
+            Statement stt = kon.createStatement();
+            if(type == "tambah"){
+                String SQL = "INSERT INTO `t_simulasi`(`kd_mk`,`pers_absen`,`pers_tugas`,`pers_uts`,`pers_uas`,`absensi`,`tugas1`,`tugas2`,`tugas3`,`uts`,`uas`,`nilaiAbsen`,`nilaiTugas`,`nilaiUts`,`nilaiUas`,`index`,`ket`) "
+                + "VALUES "
+                + "( '"+getKodeMK((String) nama_mk)+"', "
+                + " '"+prest_absen+"', "
+                + " '"+prest_tgs+"', "
+                + " '"+ prest_uts + "', "
+                + " '"+ prest_uas + "', "
+                + " '"+ totKehadiran + "', "
+                + " '"+ Double.parseDouble(txt_tugas1.getText()) + "', "
+                + " '"+ Double.parseDouble(txt_tugas2.getText()) + "', "
+                + " '"+ Double.parseDouble(txt_tugas3.getText()) + "', "
+                + " '"+ Double.parseDouble(txt_uts.getText()) + "', "
+                + " '"+ Double.parseDouble(txt_uas.getText()) + "', "
+                + " '"+ nilai_absen + "', "
+                + " '"+ nilai_tgs + "', "
+                + " '"+ n_uts + "', "
+                + " '"+ n_uas +"',"
+                + " '"+ indek +"',"
+                + " '"+ keterangan +"')";
+                stt.executeUpdate(SQL);
+            }else{
+                String SQL = "UPDATE `t_simulasi` "
+                        + "SET `pers_absen` = '"+prest_absen+"', "
+                        + "`pers_tugas` = '"+prest_tgs+"', "
+                        + "`pers_uts` = '"+prest_uts+"', "
+                        + "`pers_uas` = '"+prest_uas+"', "
+                        + "`absensi` = '"+totKehadiran+"', "
+                        + "`tugas1` = '"+Double.parseDouble(txt_tugas1.getText())+"', "
+                        + "`tugas2` = '"+Double.parseDouble(txt_tugas2.getText())+"', "
+                        + "`tugas3` = '"+Double.parseDouble(txt_tugas3.getText())+"', "
+                        + "`uts` = '"+Double.parseDouble(txt_uts.getText())+"', "
+                        + "`uas` = '"+Double.parseDouble(txt_uas.getText())+"', "
+                        + "`nilaiAbsen` = '"+nilai_absen+"', "
+                        + "`nilaiTugas` = '"+nilai_tgs+"', "
+                        + "`nilaiUts` = '"+n_uts+"', "
+                        + "`nilaiUas` = '"+n_uas+"', "
+                        + "`index` = '"+indek+"', "
+                        + "`ket` = '"+keterangan+"' "
+                        + "WHERE `t_simulasi`.`kd_mk` = '"+getKodeMK((String) nama_mk)+"'";
+                stt.executeUpdate(SQL);
+            }
             
+
             
             data[0] = nama_mk.toString();
             data[1] = String.valueOf(prest_absen) + "%";
@@ -390,15 +398,7 @@ public class frm_simulasi_nilai extends javax.swing.JFrame {
             data[17] = String.valueOf(keterangan);
             stt.close();
             kon.close();
-           
      }
-     private Object[] appendValue(Object[] obj, Object newObj) {
-
-        ArrayList<Object> temp = new ArrayList<Object>(Arrays.asList(obj));
-        temp.add(newObj);
-        return temp.toArray();
-
-      }
      public boolean validation(){
          if(comboMK.getSelectedIndex() == 0 || txt_perst_absen.getText().isEmpty()
                  || txt_perst_tugas.getText().isEmpty() || txt_perst_uas.getText().isEmpty()
@@ -873,7 +873,7 @@ public class frm_simulasi_nilai extends javax.swing.JFrame {
                 JOptionPane.ERROR_MESSAGE);
          }else{
             try{
-                addToTableAction();
+                addToTableAction("edit");
                 if(validation()){
                     tablemodel.removeRow(row);
                     tablemodel.insertRow(row, data);
@@ -917,7 +917,7 @@ public class frm_simulasi_nilai extends javax.swing.JFrame {
         
         try {
             if(validation()){
-                addToTableAction();
+                addToTableAction("tambah");
                 tablemodel.insertRow(0, data);
 
                 membersihkan_teks();
@@ -972,35 +972,45 @@ public class frm_simulasi_nilai extends javax.swing.JFrame {
 
     private void txt_cari_mkKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_cari_mkKeyReleased
         // TODO add your handling code here:
-//        tablemodel.setRowCount(0);
-
-//        for(int i = 0; i < tablemodel.getRowCount(); i++){//For each row
-//            for(int j = 0; j < tablemodel.getColumnCount(); j++){//For each column in that row
-//                if(tablemodel.getValueAt(i, j).equals(txt_cari_mk.getText())){//Search the model
-//                    System.out.println(tablemodel.getValueAt(i, j));//Print if found string
-//                }
-//            }//For loop inner
-//        }//For loop out
-         System.out.println("asdasd");
-//        try{
-//            Class.forName(driver);
-//            Connection kon = DriverManager.getConnection(database,user,pass);
-//            Statement stt = kon.createStatement();
-            
-//            while(res.next()){
-//                data[0] = res.getString(1);
-//                data[1] = res.getString(2);
-//                tablemodel.addRow(data);
-//            }
-//txt_cari_mk.getText()
-//            stt.close();
-//            kon.close();
-//        }catch(Exception ex){
-//            System.err.println(ex.getMessage());
-//            JOptionPane.showMessageDialog(null, ex.getMessage(),"ERROR",
-//                JOptionPane.INFORMATION_MESSAGE);
-//            System.exit(0);
-//        }
+        tablemodel.setRowCount(0);
+        String stat = "";
+        try{
+            Class.forName(driver);
+            Connection kon = DriverManager.getConnection(database,user,pass);
+            Statement stt = kon.createStatement();
+            String SQL = "select * from t_simulasi join t_mata_kuliah on t_mata_kuliah.kd_mk=t_simulasi.kd_mk "
+                    + "where t_mata_kuliah.nama_mk LIKE '%"+txt_cari_mk.getText()+"%' "
+                    + "OR t_simulasi.kd_mk LIKE '%"+txt_cari_mk.getText()+"%'";
+            ResultSet res = stt.executeQuery(SQL);
+            while(res.next()){
+                data[0] = res.getString(20);
+                data[1] = res.getString(3);
+                data[2] = res.getString(4);
+                data[3] = res.getString(5);
+                data[4] = res.getString(6);
+                data[5] = res.getString(7);
+                data[6] = res.getString(8);
+                data[7] = res.getString(9);
+                data[8] = res.getString(10);
+                data[9] = res.getString(11);
+                data[10] = res.getString(11);
+                data[11] = res.getString(13);
+                data[12] = res.getString(12);
+                data[13] = res.getString(14);
+                data[14] = res.getString(15);
+                data[15] = res.getString(16);
+                data[16] = res.getString(17);
+                data[17] = res.getString(18);
+                tablemodel.addRow(data);
+            }
+            res.close();
+            stt.close();
+            kon.close();
+        }catch(Exception ex){
+            JOptionPane.showMessageDialog(null, ex.getMessage(),"Error",
+                    JOptionPane.INFORMATION_MESSAGE);
+            System.exit(0);
+        }
     }//GEN-LAST:event_txt_cari_mkKeyReleased
 
     private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed

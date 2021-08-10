@@ -43,6 +43,7 @@ public class frm_bon extends javax.swing.JFrame {
         btn_ubah.setEnabled(false);
         btn_hapus.setEnabled(false);
         txt_tagihan.setEditable(false);
+        jButton2.setEnabled(false);
         setModelComboBarang();
     }
     
@@ -225,7 +226,6 @@ public class frm_bon extends javax.swing.JFrame {
     
 //    int rows = 0;
     private void tampilField() {
-//        System.out.println(tblModelNota.getValueAt(row, 0).toString());
         row = tbl_pembelian.getSelectedRow();
         noNota = Integer.valueOf(tblModelNota.getValueAt(row, 0).toString()); 
         itemBarang = Integer.valueOf(tblModelNota.getValueAt(row, 1).toString()); 
@@ -233,6 +233,7 @@ public class frm_bon extends javax.swing.JFrame {
         txt_jumlah.setText(tblModelNota.getValueAt(row, 3).toString());
         txt_totHarga.setText(tblModelNota.getValueAt(row, 4).toString());
         jLabel14.setText(String.valueOf(getTagihan(tblModelNota.getValueAt(row, 2).toString(), Integer.valueOf(tblModelNota.getValueAt(row, 0).toString()))));
+        jButton2.setEnabled(true);
     }
     
     private void setModelComboBarang(){
@@ -1209,52 +1210,50 @@ public class frm_bon extends javax.swing.JFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
-        if (comboBarang.getSelectedIndex() > 0 && getNamaBarangFromDB()) {
+        if(txt_jumlah.getText().isEmpty() ||txt_totHarga.getText().isEmpty() ||
+            jTextField2.getText().isEmpty() ||jTextField3.getText().isEmpty()){
+            JOptionPane.showMessageDialog(null, "Data Tidak Boleh Kosong","Error",
+               JOptionPane.INFORMATION_MESSAGE);
+        }else{
+           if (comboBarang.getSelectedIndex() > 0 && getNamaBarangFromDB()) {
             JOptionPane.showMessageDialog(null, "Data Tidak Boleh Kosong","Error",
                JOptionPane.INFORMATION_MESSAGE);
         } else {
             try {
-            Class.forName(driver);
-                    Connection kon = DriverManager.getConnection(database,user,pass);
-                    Statement stt = kon.createStatement();
-//                    row = tbl_keranjang.getSelectedRow();
-//                    idBarang = Integer.valueOf(tblModelKeranjang.getValueAt(row, 1).toString());
-                    String SQL = "UPDATE `t_nota_item` "
-                    + "SET"
-                    + "`idBarang` = '"+Integer.valueOf(getIdBarangFromDB((String) comboBarang.getSelectedItem()))+"', "
-                    + "`qty` = '"+ Integer.valueOf(txt_jumlah.getText())+"', "
-                    + "`totalHarga` = '"+Integer.valueOf(txt_totHarga.getText())+"' "
-                    + "WHERE "
-                    + "`noNota` ='"+noNota+"' AND `idBarang` = '"+itemBarang+"'; ";
-                    stt.executeUpdate(SQL);
-                    System.out.println(itemBarang);
-                    
-                    String QUERY = "UPDATE `t_nota` "
-                    + "SET "
-                    + "`total` = '"+ Integer.valueOf(jLabel14.getText()) +"', "
-                    + "`bayar` = '"+ Integer.valueOf(jTextField2.getText()) +"', "
-                    + "`kembalian` = '"+Integer.valueOf(jTextField3.getText())+"' "
-                    + "WHERE "
-                    + "`noNota` ='"+noNota+"'; ";
-                    stt.executeUpdate(QUERY);
-                    
-//                    dataKeranjang[0] = String.valueOf(noNota);
-//                    dataKeranjang[1] = getIdBarangFromDB((String) comboBarang.getSelectedItem());
-//                    dataKeranjang[2] = (String) comboBarang.getSelectedItem();
-//                    dataKeranjang[3] = String.valueOf(txt_jumlah.getText());
-//                    dataKeranjang[4] = String.valueOf(txt_totHarga.getText());
-//                    tblModelNota.insertRow(row, dataKeranjang);
-                    settablenotaload();
-                    membersihkan_teks();
-                    stt.close();
-                    kon.close();
-        } catch (Exception ex) {
-            System.err.println(ex.getMessage());
-            JOptionPane.showMessageDialog(null, ex.getMessage(),"Error",
-                    JOptionPane.INFORMATION_MESSAGE);
-            System.exit(0);
+                Class.forName(driver);
+                Connection kon = DriverManager.getConnection(database,user,pass);
+                Statement stt = kon.createStatement();
+                String SQL = "UPDATE `t_nota_item` "
+                        + "SET"
+                        + "`idBarang` = '"+Integer.valueOf(getIdBarangFromDB((String) comboBarang.getSelectedItem()))+"', "
+                        + "`qty` = '"+ Integer.valueOf(txt_jumlah.getText())+"', "
+                        + "`totalHarga` = '"+Integer.valueOf(txt_totHarga.getText())+"' "
+                        + "WHERE "
+                        + "`noNota` ='"+noNota+"' AND `idBarang` = '"+itemBarang+"'; ";
+                        stt.executeUpdate(SQL);
+                        System.out.println(itemBarang);
+
+                        String QUERY = "UPDATE `t_nota` "
+                        + "SET "
+                        + "`total` = '"+ Integer.valueOf(jLabel14.getText()) +"', "
+                        + "`bayar` = '"+ Integer.valueOf(jTextField2.getText()) +"', "
+                        + "`kembalian` = '"+Integer.valueOf(jTextField3.getText())+"' "
+                        + "WHERE "
+                        + "`noNota` ='"+noNota+"'; ";
+                        stt.executeUpdate(QUERY);
+                        settablenotaload();
+                        membersihkan_teks();
+                        stt.close();
+                        kon.close();
+                } catch (Exception ex) {
+                    System.err.println(ex.getMessage());
+                    JOptionPane.showMessageDialog(null, ex.getMessage(),"Error",
+                            JOptionPane.INFORMATION_MESSAGE);
+                    System.exit(0);
+                }
+            } 
         }
-        }
+        
         
     }//GEN-LAST:event_jButton2ActionPerformed
 
